@@ -3,17 +3,37 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AdminLogin } from './components/AdminAuth/Login';
 import DashboardPage from './pages/Dashboard';
 import DishManagementPage from './pages/DishManagementPage';
+import IngredientManagementPage from './pages/IngredientManagementPage';
 
+// Toastify
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => (
-  <Router>
-    <Routes>
-      <Route path="/login" element={<AdminLogin />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/dishes" element={<DishManagementPage />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
-  </Router>
+  <>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<AdminLogin />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/dishes" element={<DishManagementPage />} />
+        <Route path="/ingredients" element={<IngredientManagementPage />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Router>
+
+    {/* Toast container for notifications */}
+    <ToastContainer
+      position="bottom-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
+  </>
 );
 
 export default App;

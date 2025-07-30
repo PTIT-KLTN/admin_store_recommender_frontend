@@ -37,7 +37,7 @@ export const Dialog: FC<DialogProps> = ({ open, onOpenChange, children }) => {
 
 export const DialogContent: FC<DialogContentProps> = ({ children, className = '' }) => (
   <div
-    className={`w-full w-[80vw] h-[85vh] bg-white rounded-lg shadow-lg overflow-auto ${className}`}
+    className={`w-full max-w-[80vw] max-h-[85vh] bg-white rounded-lg shadow-lg overflow-auto ${className}`}
   >
     {children}
   </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Edit, Trash2 } from 'lucide-react';
-import type { Dish } from '../../models/models';
+import type { Dish } from '../../models/dish';
 
 interface DishCardProps {
   dish: Dish;

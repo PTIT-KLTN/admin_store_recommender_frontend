@@ -5,7 +5,7 @@ import React, {
   ReactNode,
 } from 'react';
 import { login as apiLogin } from '../services/auth';
-import { Admin } from '../models/models';
+import { Admin } from '../models/admin';
 
 interface AuthContextType {
   user: Admin | null;

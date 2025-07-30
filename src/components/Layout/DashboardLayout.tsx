@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { BellIcon } from '@heroicons/react/24/outline';
-import { Alert, AlertType } from '../Common/Alert';
+import { Toaster, toast } from 'react-hot-toast';
 
 interface NotificationItem {
   id: string;
   title: string;
   message: string;
-  type: AlertType;
+  type: 'success' | 'error' | 'warning' | 'info';
 }
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -20,40 +20,44 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
     { id: '2', title: 'Đơn hàng mới', message: 'Bạn có đơn hàng #12345 vừa được tạo.', type: 'success' },
   ]);
   const [showList, setShowList] = useState(false);
-  const [alert, setAlert] = useState<NotificationItem | null>(null);
 
+  // Toast khi login thành công
   useEffect(() => {
     if ((location.state as any)?.success) {
-      setAlert({ id: 'login-success', title: 'Đăng nhập thành công!', message: '', type: 'success' });
+      toast.success('Đăng nhập thành công!');
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate]);
 
-  useEffect(() => {
-    if (alert) {
-      const timer = setTimeout(() => setAlert(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [alert]);
-
   const handleSelect = (item: NotificationItem) => {
-    setAlert(item);
+    const content = item.message || item.title;
+    switch (item.type) {
+      case 'success':
+        toast.success(content);
+        break;
+      case 'error':
+        toast.error(content);
+        break;
+      case 'warning':
+        toast(content);
+        break;
+      case 'info':
+      default:
+        toast(content);
+    }
     setShowList(false);
   };
 
   return (
     <>
-      {/* Alert Notification */}
-      {alert && (
-        <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
-      )}
+      {/* Toast container */}
+      <Toaster position="top-right" />
 
-      {/* Layout Container with updated background */}
       <div className="flex h-screen bg-gray-100">
         <Sidebar />
         <main className="flex-1 p-8 overflow-auto">
-          {/* Notification bar only, title removed */}
-          <div className="mb-8 flex justify-end relative">
+          <div className="mb-8 flex items-center justify-between relative">
+            <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
             <div className="relative">
               <button
                 onClick={() => setShowList(prev => !prev)}
@@ -70,7 +74,6 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
               {showList && (
                 <>
-                  {/* Arrow pointer */}
                   <div className="absolute right-3 top-full mt-1 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-4 border-b-white" />
                   <ul className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-md shadow-lg z-20">
                     {notifications.map(item => (
@@ -92,7 +95,6 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
             </div>
           </div>
 
-          {/* Page Content */}
           {children}
         </main>
       </div>

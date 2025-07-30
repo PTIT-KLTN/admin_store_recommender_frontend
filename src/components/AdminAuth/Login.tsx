@@ -2,7 +2,7 @@
 import React, { useState, FormEvent, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
-import loginImage from '../../assets/login.jpg';
+import loginImage from '../../assets/images/login.jpg';
 import { AuthContext } from '../../context/AuthContext';
 import { FullPageSpinner } from '../Common/FullPageSpinner';
 

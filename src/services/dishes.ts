@@ -1,4 +1,5 @@
-import { Dish } from '../models/models';
+import { Dish } from '../models/dish';
+import { NewDishPayload } from '../models/dish';
 
 const BASE_URL = process.env.REACT_APP_BASE_API || '';
 
@@ -8,18 +9,75 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return json as T;
 }
 
-async function fetchWithToken(input: RequestInfo, init: RequestInit = {}) {
-  const token = localStorage.getItem('access_token');
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(init.headers || {}),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-  return fetch(input, { ...init, headers });
-}
-
 export async function getDishes(): Promise<Dish[]> {
-  const res = await fetchWithToken(`${BASE_URL}/admin/dishes`);
+  const token = localStorage.getItem('access_token');
+
+  const res = await fetch(`${BASE_URL}/admin/dishes`,
+    {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    }
+  );
   const data = await handleResponse<{ dishes: Dish[] }>(res);
   return data.dishes;
+}
+
+export async function createDish(
+  payload: NewDishPayload
+): Promise<Dish> {
+  
+  // Lấy token đã lưu trong localStorage
+  const token = localStorage.getItem('access_token');
+  if (!token) throw new Error('No access token, please login first.');
+
+  const res = await fetch(`${BASE_URL}/admin/dishes`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(payload),
+  });
+
+  // Giả sử API trả về { dish: Dish }
+  const data = await handleResponse<{ dish: Dish }>(res);
+  return data.dish;
+}
+
+export async function updateDish(
+  id: string,
+  payload: NewDishPayload
+): Promise<Dish> {
+  const token = localStorage.getItem('access_token');
+  if (!token) throw new Error('No access token, please login first.');
+
+  const res = await fetch(`${BASE_URL}/admin/dishes/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(payload),
+  });
+
+  // Giả sử API trả về { dish: Dish }
+  const data = await handleResponse<{ dish: Dish }>(res);
+  return data.dish;
+}
+
+export async function deleteDish(id: string): Promise<void> {
+  const token = localStorage.getItem('access_token');
+  const res = await fetch(`${BASE_URL}/admin/dishes/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(json.message || 'Xóa món thất bại');
+  }
 }

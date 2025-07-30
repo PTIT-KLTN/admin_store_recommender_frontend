@@ -1,4 +1,4 @@
-import {Admin, LoginResponse} from '../models/models';
+import {Admin, LoginResponse} from '../models/admin';
 const BASE_URL = process.env.REACT_APP_BASE_API || '';
 
 async function handleResponse(res: Response) {
@@ -34,4 +34,14 @@ export async function refreshToken(): Promise<{
         body: JSON.stringify({ refresh_token: token }),
     });
     return handleResponse(res);
+}
+
+async function fetchWithToken(input: RequestInfo, init: RequestInit = {}) {
+  const token = localStorage.getItem('access_token');
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(init.headers || {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+  return fetch(input, { ...init, headers });
 }
