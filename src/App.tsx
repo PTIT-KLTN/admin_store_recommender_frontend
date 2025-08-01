@@ -4,6 +4,9 @@ import { AdminLogin } from './components/AdminAuth/Login';
 import DashboardPage from './pages/Dashboard';
 import DishManagementPage from './pages/DishManagementPage';
 import IngredientManagementPage from './pages/IngredientManagementPage';
+import AccountManagementPage from './pages/AccountManagementPage';
+import AccountPage from './pages/AccountPage';
+import DataSystemPage from './pages/DataSystemPage';
 
 // Toastify
 import { ToastContainer } from 'react-toastify';
@@ -16,7 +19,11 @@ const App: React.FC = () => (
         <Route path="/login" element={<AdminLogin />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/dishes" element={<DishManagementPage />} />
-        <Route path="/ingredients" element={<IngredientManagementPage />} />
+        <Route path="/ingredients" element={<IngredientManagementPage />} />  
+        <Route path="/accounts" element={<AccountManagementPage />} />
+        <Route path="/account" element={<AccountPage />} />
+        <Route path="/data-system" element={<DataSystemPage />} />
+        
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

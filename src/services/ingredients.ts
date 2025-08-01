@@ -11,7 +11,8 @@ async function handleResponse<T>(res: Response): Promise<T> {
 export async function getIngredients(
     page = 0,
     category?: string,
-    size?: number
+    size?: number,
+    search?: string
 ): Promise<{
     ingredients: Ingredient[];
     pagination: Pagination;
@@ -26,6 +27,10 @@ export async function getIngredients(
 
     if (category && category !== 'All') {
         url += `&category=${encodeURIComponent(category)}`;
+    }
+
+    if (search) {
+        url += `&search=${encodeURIComponent(search)}`;
     }
     
     const res = await fetch(url, {

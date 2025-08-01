@@ -4,29 +4,27 @@ import { useNavigate, Link } from 'react-router-dom';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import loginImage from '../../assets/images/login.jpg';
 import { AuthContext } from '../../context/AuthContext';
-import { FullPageSpinner } from '../Common/FullPageSpinner';
+import { toast } from 'react-toastify';
+
 
 export const AdminLogin: React.FC = () => {
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false)
     const { signIn } = useContext(AuthContext)!;
-
-    if (loading) {
-        return <FullPageSpinner />;
-    }
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
-            await signIn(email, password);
+            await signIn(username, password);
             navigate('/dashboard', { state: { success: true } });
         } catch (err: any) {
             setError(err.message);
+            toast.error(err.message || 'Đăng nhập thất bại');
         } finally {
             setLoading(false);
         }
@@ -48,18 +46,17 @@ export const AdminLogin: React.FC = () => {
 
                 {/* Form */}
                 <div className="w-full lg:w-1/2 p-10">
-                    <h2 className="text-4xl font-extrabold text-green-600 mb-6">Welcome Back</h2>
-                    {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
+                    <h2 className="text-4xl font-extrabold text-green-600 mb-6">Welcome back!</h2>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="email" className="block text-gray-700 mb-1">Email</label>
+                            <label htmlFor="username" className="block text-gray-700 mb-1">Tên đăng nhập</label>
                             <div className="relative">
                                 <EnvelopeIcon className="w-5 h-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                                 <input
-                                    id="email"
-                                    type="email"
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
+                                    id="username"
+                                    type="username"
+                                    value={username}
+                                    onChange={e => setUsername(e.target.value)}
                                     required
                                     placeholder="you@example.com"
                                     className="w-full pl-10 pr-4 py-3 border border-green-200 bg-green-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-200 transition"
@@ -67,7 +64,7 @@ export const AdminLogin: React.FC = () => {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="password" className="block text-gray-700 mb-1">Password</label>
+                            <label htmlFor="password" className="block text-gray-700 mb-1">Mật khẩu</label>
                             <div className="relative">
                                 <LockClosedIcon className="w-5 h-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                                 <input
@@ -83,28 +80,31 @@ export const AdminLogin: React.FC = () => {
                         </div>
                         <button
                             type="submit"
+                            disabled={loading}
                             className="
-                                        w-full flex items-center justify-center
-                                        py-3 px-6
-                                        bg-gradient-to-r from-green-400 to-green-600
-                                        hover:from-green-500 hover:to-green-700
-                                        text-white font-semibold
-                                        rounded-lg
-                                        shadow-lg
-                                        transform hover:scale-105
-                                        transition duration-300
-                                        focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50
-                                        disabled:opacity-50 disabled:cursor-not-allowed
-                                    "
-                        >
-                            Sign In
+                                    w-full flex items-center justify-center
+                                    py-3 px-6
+                                    bg-gradient-to-r from-green-400 to-green-600
+                                    hover:from-green-500 hover:to-green-700
+                                    text-white font-semibold
+                                    rounded-lg shadow-lg
+                                    transform hover:scale-105
+                                    transition duration-300
+                                    focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50
+                                disabled:opacity-50 disabled:cursor-not-allowed
+                                "
+                                >
+                            {loading && (
+                                <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
+                            )}
+                            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                         </button>
 
                     </form>
 
                     <div className="mt-4 text-right">
                         <Link to="/forgot-password" className="text-sm text-green-600 hover:underline">
-                            Forgot Password?
+                            Quên mật khẩu?
                         </Link>
                     </div>
                 </div>

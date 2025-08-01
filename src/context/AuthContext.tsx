@@ -9,7 +9,7 @@ import { Admin } from '../models/admin';
 
 interface AuthContextType {
   user: Admin | null;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (username: string, password: string) => Promise<void>;
   signOut: () => void;
 }
 
@@ -25,13 +25,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   // Sign in and store user + token
-  const signIn = async (email: string, password: string) => {
-    const json = await apiLogin(email, password);
-    const u: Admin = json.admin;
+  const signIn = async (username: string, password: string) => {
+    const { admin: a, access_token, refresh_token } = await apiLogin(username, password);
+    const u: Admin = {
+      id: a.id,
+      username: a.username,
+      fullname: a.fullname,
+      role: a.role,
+      is_enabled: a.is_enabled,
+    };
 
     localStorage.setItem('admin_user', JSON.stringify(u));
-    localStorage.setItem('access_token', json.access_token);
-    localStorage.setItem('refresh_token', json.refresh_token); 
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', refresh_token);
     setUser(u);
   };
 
@@ -39,7 +45,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const signOut = () => {
     localStorage.removeItem('admin_user');
     localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token'); 
+    localStorage.removeItem('refresh_token');
     setUser(null);
     window.location.href = '/login';
   };

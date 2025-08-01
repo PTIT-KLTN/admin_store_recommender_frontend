@@ -50,9 +50,9 @@ export const Sidebar: React.FC = () => {
             </h3>
             <p
               className="text-sm text-gray-500 truncate w-full text-center"
-              title={user?.email}
+              title={user?.username}
             >
-              {user?.email}
+              {user?.username}
             </p>
           </>
         )}

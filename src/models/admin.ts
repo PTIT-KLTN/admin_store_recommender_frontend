@@ -1,9 +1,11 @@
 export interface Admin {
-    email: string;
+    username: string;
     fullname: string;
     id: string;
     is_enabled: boolean;
     role: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface LoginResponse {

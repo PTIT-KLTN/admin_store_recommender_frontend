@@ -57,8 +57,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         <Sidebar />
         <main className="flex-1 p-8 overflow-auto">
           <div className="mb-8 flex items-center justify-between relative">
-            <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-            <div className="relative">
+            <div className="relative item-right">
               <button
                 onClick={() => setShowList(prev => !prev)}
                 className="relative p-2 rounded-full hover:bg-gray-200 transition-colors"

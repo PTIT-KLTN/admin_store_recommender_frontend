@@ -4,6 +4,6 @@ export interface Pagination {
   hasPrevious: boolean;
   pageSize: number;      
   totalElements: number;   
-  totalPages: number;     
+  totalPages: number;
 }
 

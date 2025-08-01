@@ -49,7 +49,7 @@ export const DialogHeader: FC<{ children: ReactNode }> = ({ children }) => (
   </div>
 );
 
-export const DialogTitle: FC<{ children: ReactNode }> = ({ children }) => (
+export const DialogTitle: FC<{ children: ReactNode }> = ({ children}) => (
   <h2 className="text-lg font-semibold text-gray-900">
     {children}
   </h2>
