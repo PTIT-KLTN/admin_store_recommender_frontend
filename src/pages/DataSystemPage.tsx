@@ -1,50 +1,129 @@
-// src/pages/DataSystemPage.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FilterBar } from '../components/DataSystem/FilterBar';
+import { ServiceStatus } from '../components/DataSystem/ServiceStatus';
+import { TaskTable } from '../components/DataSystem/TaskTable';
+import { TaskDetailModal } from '../components/DataSystem/TaskDetailModal';
 import { DashboardLayout } from '../components/Layout/DashboardLayout';
-import { Tab } from '@headlessui/react';
-import { Calendar, Cog, FileText } from 'lucide-react';
-import ScheduleSettings from '../components/DataSystem/ScheduleSettings';
-import SystemConfig from '../components/DataSystem/SystemConfig';
-import LogsViewer from '../components/DataSystem/LogsViewer';
+import { getTasks, startCrawl, Task } from '../services/dataSystem';
+import { CreateCrawlTaskForm } from '../components/DataSystem/CreateTaskForm';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from '../components/Common/Dialog';
 
-const tabs = [
-  { name: 'Lịch thu thập', icon: Calendar, component: <ScheduleSettings /> },
-  { name: 'Cấu hình hệ thống', icon: Cog, component: <SystemConfig /> },
-  { name: 'Log hoạt động', icon: FileText, component: <LogsViewer /> },
-];
+export const DataSystemPage: React.FC = () => {
+  const [filterChain, setFilterChain] = useState<string>('');
+  const [filterStoreId, setFilterStoreId] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-const DataSystemPage: React.FC = () => (
-  <DashboardLayout>
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-4">Quản lý Data System</h1>
-      <Tab.Group>
-        <Tab.List className="flex space-x-3 border-b-2 border-gray-200 mb-3">
-          {tabs.map(tab => (
-            <Tab
-              key={tab.name}
-              className={({ selected }) =>
-                `flex items-center px-3 py-1 -mb-px text-base font-medium transition-colors duration-200 ${
-                  selected
-                    ? 'border-b-3 border-green-500 text-green-600'
-                    : 'text-gray-600 hover:text-green-600'
-                }`
-              }
+  const [isStarting, setIsStarting] = useState<boolean>(false);
+  const [isPolling, setIsPolling] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+
+  const fetchTasks = async () => {
+    setLoadingTasks(true);
+    try {
+      const data = await getTasks();
+      // filter client-side
+      let filtered = data;
+      if (filterChain) filtered = filtered.filter(t => t.chain === filterChain);
+      if (filterStoreId) filtered = filtered.filter(t => t.store_id.includes(filterStoreId));
+      if (status) filtered = filtered.filter(t => t.status === status);
+      if (dateFrom) filtered = filtered.filter(t => new Date(t.created_at) >= new Date(dateFrom));
+      if (dateTo) filtered = filtered.filter(t => new Date(t.created_at) <= new Date(dateTo));
+      setTasks(filtered);
+    } catch (err) {
+      toast.error('Không tải được danh sách');
+    } finally {
+      setLoadingTasks(false);
+    }
+  };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isPolling) {
+      fetchTasks();
+      interval = setInterval(fetchTasks, 5000);
+    }
+    return () => clearInterval(interval);
+  }, [isPolling, filterChain, filterStoreId, status, dateFrom, dateTo]);
+
+  return (
+    <DashboardLayout>
+      <div className="p-8 space-y-6">
+        <header className="pb-4 border-b border-gray-200">
+          <h1 className="text-3xl font-bold text-gray-800">Quản lý Hệ thống Thu thập Dữ liệu</h1>
+        </header>
+
+        <ToastContainer position="top-right" autoClose={3000} />
+
+        <div className="flex justify-between items-center mb-6">
+          <ServiceStatus />
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          >
+            Khởi tạo Task mới
+          </button>
+        </div>
+        {isModalOpen && (
+          <CreateCrawlTaskForm
+            onCancel={() => setIsModalOpen(false)}
+            onSuccess={() => {
+              setIsModalOpen(false);
+              fetchTasks();
+            }}
+          />
+        )}
+
+        <FilterBar
+          chain={filterChain}
+          storeId={filterStoreId}
+          status={status}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          onChange={(field, value) => {
+            if (field === 'chain') setFilterChain(value);
+            if (field === 'storeId') setFilterStoreId(value);
+            if (field === 'status') setStatus(value);
+            if (field === 'dateFrom') setDateFrom(value);
+            if (field === 'dateTo') setDateTo(value);
+          }}
+          onSearch={fetchTasks}
+        />
+
+        <div className="bg-white shadow-md rounded-2xl p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-800">Danh sách Task</h2>
+            <button
+              onClick={() => setIsPolling(p => !p)}
+              className="px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-sm hover:bg-gray-200 transition"
             >
-              <tab.icon className="w-4 h-4 mr-1" />
-              {tab.name}
-            </Tab>
-          ))}
-        </Tab.List>
-        <Tab.Panels>
-          {tabs.map(tab => (
-            <Tab.Panel key={tab.name} className="bg-white p-4 rounded-lg shadow-sm">
-              {tab.component}
-            </Tab.Panel>
-          ))}
-        </Tab.Panels>
-      </Tab.Group>
-    </div>
-  </DashboardLayout>
-);
+              {isPolling ? 'Dừng Polling' : 'Bật Polling'}
+            </button>
+          </div>
+          {loadingTasks ? (
+            <p className="text-center text-gray-500">Đang tải danh sách…</p>
+          ) : (
+            <TaskTable tasks={tasks} onView={setSelectedTaskId} />
+          )}
+        </div>
 
-export default DataSystemPage;
+        {selectedTaskId && (
+          <TaskDetailModal taskId={selectedTaskId} isOpen onClose={() => setSelectedTaskId(null)} />
+        )}
+      </div>
+    </DashboardLayout>
+  );
+};
