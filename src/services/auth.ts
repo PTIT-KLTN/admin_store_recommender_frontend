@@ -12,13 +12,15 @@ async function handleResponse(res: Response) {
  * Sends login request and returns tokens + admin info
  */
 export async function login(
-    username: string,
+    email: string,
     password: string
 ): Promise<LoginResponse> {
     const res = await fetcher(`${BASE_URL}/admin_auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        headers: { 'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+         },
+        body: JSON.stringify({ email, password }),
     });
     return handleResponse(res) as Promise<LoginResponse>;
 }
@@ -31,7 +33,9 @@ export async function refreshToken(): Promise<{
     const token = localStorage.getItem('refresh_token');
     const res = await fetch(`${BASE_URL}/admin_auth/refresh`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+         },
         body: JSON.stringify({ refresh_token: token }),
     });
     return handleResponse(res);
@@ -41,6 +45,7 @@ async function fetchWithToken(input: RequestInfo, init: RequestInit = {}) {
     const token = localStorage.getItem('access_token');
     const headers = {
         'Content-Type': 'application/json',
+        //'ngrok-skip-browser-warning': 'true',
         ...(init.headers || {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
@@ -49,13 +54,14 @@ async function fetchWithToken(input: RequestInfo, init: RequestInit = {}) {
 
 export async function updateAdminProfile(
     id: string,
-    data: { username?: string; fullname?: string }
+    data: { email?: string; fullname?: string }
 ): Promise<Admin> {
     const token = localStorage.getItem('access_token');
     const res = await fetch(`${BASE_URL}/admin/admins/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            //'ngrok-skip-browser-warning': 'true',
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
@@ -65,7 +71,7 @@ export async function updateAdminProfile(
     const a = json.admin;
     return {
         id: a.id,
-        username: a.username,
+        email: a.email,
         fullname: a.fullname,
         role: a.role,
         is_enabled: a.is_enabled,

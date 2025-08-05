@@ -10,7 +10,7 @@ interface CreateCrawlTaskFormProps {
 }
 
 export const CreateCrawlTaskForm: React.FC<CreateCrawlTaskFormProps> = ({ onSuccess, onCancel }) => {
-    const [selectedChain, setSelectedChain] = useState<'winmart' | 'BHX'>('winmart');
+    const [selectedChain, setSelectedChain] = useState<'WM' | 'BHX'>('WM');
     const [isStoresLoading, setIsStoresLoading] = useState(false);
 
     const [stores, setStores] = useState<Store[]>([]);
@@ -24,7 +24,7 @@ export const CreateCrawlTaskForm: React.FC<CreateCrawlTaskFormProps> = ({ onSucc
         setStoreId('');
         setStores([]);
 
-        const chains = selectedChain === 'winmart'
+        const chains = selectedChain === 'WM'
             ? (['winmart', 'winmart+'] as const)
             : ([selectedChain] as const);
 
@@ -100,7 +100,7 @@ export const CreateCrawlTaskForm: React.FC<CreateCrawlTaskFormProps> = ({ onSucc
                     <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-2">Chuỗi</label>
                         <div className="flex space-x-2">
-                            {(['winmart', 'BHX'] as const).map(c => (
+                            {(['WM', 'BHX'] as const).map(c => (
                                 <button
                                     key={c}
                                     type="button"
@@ -110,7 +110,7 @@ export const CreateCrawlTaskForm: React.FC<CreateCrawlTaskFormProps> = ({ onSucc
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
-                                    {c === 'winmart' ? 'WinMart' : 'Bách Hóa Xanh'}
+                                    {c === 'WM' ? 'WinMart' : 'Bách Hóa Xanh'}
                                 </button>
                             ))}
                         </div>

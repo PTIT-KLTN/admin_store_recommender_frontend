@@ -13,19 +13,28 @@ import {
 } from '@heroicons/react/24/outline';
 import { AuthContext } from '../../context/AuthContext';
 
-const items = [
-  { name: 'Account Info', to: '/account', Icon: UserCircleIcon },
-  { name: 'Manage Accounts', to: '/accounts', Icon: UsersIcon },
-  { name: 'Manage Ingredients', to: '/ingredients', Icon: CubeIcon },
-  { name: 'Manage Dishes', to: '/dishes', Icon: ClipboardIcon },
-  { name: 'Data System', to: '/data-system', Icon: CloudIcon },
+const allItems = [
+  { name: 'Thông tin người dùng', to: '/account', Icon: UserCircleIcon },
+  { name: 'Quản lý tài khoản', to: '/accounts', Icon: UsersIcon },
+  { name: 'Quản lý nguyên liệu', to: '/ingredients', Icon: CubeIcon },
+  { name: 'Quản lý món ăn', to: '/dishes', Icon: ClipboardIcon },
+  { name: 'Hệ thống dữ liệu', to: '/data-system', Icon: CloudIcon },
 ];
+
+
 
 export const Sidebar: React.FC = () => {
   const { pathname } = useLocation();
   const { user, signOut } = useContext(AuthContext)!;
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => setCollapsed(prev => !prev);
+
+  const items = allItems.filter(item => {
+    if (['/accounts','/data-system'].includes(item.to)) {
+      return user?.role === 'SUPER_ADMIN';
+    }
+    return true;
+  });
 
   return (
     <aside
@@ -50,9 +59,9 @@ export const Sidebar: React.FC = () => {
             </h3>
             <p
               className="text-sm text-gray-500 truncate w-full text-center"
-              title={user?.username}
+              title={user?.email}
             >
-              {user?.username}
+              {user?.email}
             </p>
           </>
         )}
@@ -74,15 +83,18 @@ export const Sidebar: React.FC = () => {
       {/* Navigation */}
       <nav className="flex-1 w-full px-2 mt-4">
         {items.map(({ name, to, Icon }) => {
-          const active = pathname.startsWith(to);
+          const active = to === '/account'
+              ? pathname === to
+              : pathname.startsWith(to);
+
           return (
             <Link
               key={to}
               to={to}
               className={`
-                flex items-center w-full p-3 mb-2 rounded-lg transition-colors
+                font-semibold flex items-center w-full p-3 mb-2 rounded-lg transition-colors
                 ${active ? 'bg-green-200 text-gray-800' : 'text-gray-700 hover:bg-green-100'}
-              `}
+              `}  
             >
               <Icon className="w-6 h-6" />
               {!collapsed && <span className="ml-3 font-medium truncate">{name}</span>}

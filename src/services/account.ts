@@ -25,14 +25,15 @@ export async function getAccounts(
   if (sortAsc !== undefined) params.append('sortAsc', sortAsc.toString());
 
   const res = await fetch(`${BASE_URL}/admin/admins?${params}`, {
-    headers: { Authorization: `Bearer ${token}` }
+    headers: { Authorization: `Bearer ${token}`,
+  'ngrok-skip-browser-warning': 'true' }
   });
   return handleResponse<{ admins: Account[]; pagination: Pagination }>(res);
 }
 
 
 export async function createAccount(
-  username: string,
+  email: string,
   fullname: string
 ): Promise<Account> {
   const token = localStorage.getItem('access_token');
@@ -40,10 +41,11 @@ export async function createAccount(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      //'ngrok-skip-browser-warning': 'true',
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({
-      username, fullname
+      email, fullname
     })
   });
   return handleResponse<Account>(res);
@@ -51,7 +53,7 @@ export async function createAccount(
 
 export async function updateAccount(
   id: string,
-  username: string,
+  email: string,
   fullname: string
 ): Promise<Account> {
   const token = localStorage.getItem('access_token');
@@ -60,10 +62,11 @@ export async function updateAccount(
     {
       method: 'PUT',
       headers: {
+        //'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ username, fullname }),
+      body: JSON.stringify({ email, fullname }),
     }
   );
   return handleResponse<Account>(res);
@@ -74,6 +77,7 @@ export async function toggleAccountEnabled(id: string, enable: boolean): Promise
   const res = await fetch(`${BASE_URL}/admin/admins/${id}/status`, {
     method: 'PATCH',
     headers: {
+      //'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },

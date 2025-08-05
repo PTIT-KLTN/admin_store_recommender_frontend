@@ -1,5 +1,5 @@
 export interface Admin {
-    username: string;
+    email: string;
     fullname: string;
     id: string;
     is_enabled: boolean;

@@ -16,6 +16,7 @@ export async function getDishes(): Promise<Dish[]> {
     {
       method: "GET",
       headers: {
+        //'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
@@ -36,6 +37,7 @@ export async function createDish(
   const res = await fetch(`${BASE_URL}/admin/dishes`, {
     method: 'POST',
     headers: {
+      //'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
@@ -57,6 +59,7 @@ export async function updateDish(
   const res = await fetch(`${BASE_URL}/admin/dishes/${id}`, {
     method: 'PUT',
     headers: {
+      //'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
@@ -73,6 +76,7 @@ export async function deleteDish(id: string): Promise<void> {
   const res = await fetch(`${BASE_URL}/admin/dishes/${id}`, {
     method: 'DELETE',
     headers: {
+      //'ngrok-skip-browser-warning': 'true',
       Authorization: `Bearer ${token}`,
     },
   });

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FilterBar } from '../components/DataSystem/FilterBar';
@@ -6,15 +7,8 @@ import { ServiceStatus } from '../components/DataSystem/ServiceStatus';
 import { TaskTable } from '../components/DataSystem/TaskTable';
 import { TaskDetailModal } from '../components/DataSystem/TaskDetailModal';
 import { DashboardLayout } from '../components/Layout/DashboardLayout';
-import { getTasks, startCrawl, Task } from '../services/dataSystem';
+import { getTasks, Task } from '../services/dataSystem';
 import { CreateCrawlTaskForm } from '../components/DataSystem/CreateTaskForm';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter
-} from '../components/Common/Dialog';
 
 export const DataSystemPage: React.FC = () => {
   const [filterChain, setFilterChain] = useState<string>('');
@@ -23,40 +17,26 @@ export const DataSystemPage: React.FC = () => {
   const [dateFrom, setDateFrom] = useState<string>('');
   const [dateTo, setDateTo] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [isStarting, setIsStarting] = useState<boolean>(false);
   const [isPolling, setIsPolling] = useState<boolean>(false);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loadingTasks, setLoadingTasks] = useState<boolean>(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
-  const fetchTasks = async () => {
-    setLoadingTasks(true);
-    try {
+  // React Query với polling nền
+  const { data: tasks = [], isFetching, refetch } = useQuery<Task[], Error, Task[]>({
+    queryKey: ['tasks', filterChain, filterStoreId, status, dateFrom, dateTo],
+    queryFn: async () => {
       const data = await getTasks();
-      // filter client-side
       let filtered = data;
       if (filterChain) filtered = filtered.filter(t => t.chain === filterChain);
       if (filterStoreId) filtered = filtered.filter(t => t.store_id.includes(filterStoreId));
       if (status) filtered = filtered.filter(t => t.status === status);
       if (dateFrom) filtered = filtered.filter(t => new Date(t.created_at) >= new Date(dateFrom));
       if (dateTo) filtered = filtered.filter(t => new Date(t.created_at) <= new Date(dateTo));
-      setTasks(filtered);
-    } catch (err) {
-      toast.error('Không tải được danh sách');
-    } finally {
-      setLoadingTasks(false);
-    }
-  };
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPolling) {
-      fetchTasks();
-      interval = setInterval(fetchTasks, 5000);
-    }
-    return () => clearInterval(interval);
-  }, [isPolling, filterChain, filterStoreId, status, dateFrom, dateTo]);
+      return filtered;
+    },
+    refetchInterval: isPolling ? 5000 : false,
+    
+    // onError: () => toast.error('Không tải được danh sách'),
+  });
 
   return (
     <DashboardLayout>
@@ -69,20 +49,21 @@ export const DataSystemPage: React.FC = () => {
 
         <div className="flex justify-between items-center mb-6">
           <ServiceStatus />
-
           <button
+            type="button"
             onClick={() => setIsModalOpen(true)}
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
           >
             Khởi tạo Task mới
           </button>
         </div>
+
         {isModalOpen && (
           <CreateCrawlTaskForm
             onCancel={() => setIsModalOpen(false)}
             onSuccess={() => {
               setIsModalOpen(false);
-              fetchTasks();
+              refetch();
             }}
           />
         )}
@@ -100,20 +81,22 @@ export const DataSystemPage: React.FC = () => {
             if (field === 'dateFrom') setDateFrom(value);
             if (field === 'dateTo') setDateTo(value);
           }}
-          onSearch={fetchTasks}
+          onSearch={() => refetch()}
         />
 
         <div className="bg-white shadow-md rounded-2xl p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">Danh sách Task</h2>
             <button
+              type="button"
               onClick={() => setIsPolling(p => !p)}
               className="px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-sm hover:bg-gray-200 transition"
             >
               {isPolling ? 'Dừng Polling' : 'Bật Polling'}
             </button>
           </div>
-          {loadingTasks ? (
+
+          {isFetching ? (
             <p className="text-center text-gray-500">Đang tải danh sách…</p>
           ) : (
             <TaskTable tasks={tasks} onView={setSelectedTaskId} />

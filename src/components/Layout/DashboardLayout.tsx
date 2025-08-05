@@ -55,44 +55,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
       <div className="flex h-screen bg-gray-100">
         <Sidebar />
-        <main className="flex-1 p-8 overflow-auto">
-          <div className="mb-8 flex items-center justify-between relative">
-            <div className="relative item-right">
-              <button
-                onClick={() => setShowList(prev => !prev)}
-                className="relative p-2 rounded-full hover:bg-gray-200 transition-colors"
-                aria-label="Notifications"
-              >
-                <BellIcon className="w-6 h-6 text-gray-600" />
-                {notifications.length > 0 && (
-                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    {notifications.length}
-                  </span>
-                )}
-              </button>
-
-              {showList && (
-                <>
-                  <div className="absolute right-3 top-full mt-1 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-4 border-b-white" />
-                  <ul className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-md shadow-lg z-20">
-                    {notifications.map(item => (
-                      <li
-                        key={item.id}
-                        className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-200 last:border-b-0"
-                        onClick={() => handleSelect(item)}
-                      >
-                        <p className="text-sm font-semibold text-gray-800">{item.title}</p>
-                        <p className="mt-1 text-sm text-gray-600">{item.message}</p>
-                      </li>
-                    ))}
-                    {notifications.length === 0 && (
-                      <li className="px-4 py-3 text-gray-500">Không có thông báo</li>
-                    )}
-                  </ul>
-                </>
-              )}
-            </div>
-          </div>
+        <main className="flex-1 overflow-auto">
 
           {children}
         </main>

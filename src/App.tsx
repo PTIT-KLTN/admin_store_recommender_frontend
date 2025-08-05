@@ -14,6 +14,9 @@ import AccountManagementPage from './pages/AccountManagementPage';
 import AccountPage from './pages/AccountPage';
 import { DataSystemPage } from './pages/DataSystemPage';
 import StoreProductsPage from './pages/StoreProductPage';
+import ForgotPasswordRequest from './components/AdminAuth/ForgotPasswordRequest';
+import ResetPassword from './components/AdminAuth/ResetPassword';
+import ProtectedRoute from './components/AdminAuth/ProtectedRoute';
 
 const queryClient = new QueryClient();
 
@@ -29,10 +32,27 @@ const App: React.FC = () => (
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/dishes" element={<DishManagementPage />} />
         <Route path="/ingredients" element={<IngredientManagementPage />} />
-        <Route path="/accounts" element={<AccountManagementPage />} />
         <Route path="/account" element={<AccountPage />} />
-        <Route path="/data-system" element={<DataSystemPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordRequest />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
+
+        <Route
+          path="/accounts"
+          element={
+            <ProtectedRoute allowedRoles={['super_admin']}>
+              <AccountManagementPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/data-system"
+          element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+              <DataSystemPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/admin/products/store/:store_id"

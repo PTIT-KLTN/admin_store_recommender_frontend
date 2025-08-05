@@ -11,6 +11,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
 // Tạo headers mặc định, bao gồm Content-Type và Authorization (nếu có token)
 function getAuthHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
+    //'ngrok-skip-browser-warning': 'true',
     'Content-Type': 'application/json',
   };
   const token = localStorage.getItem('access_token');

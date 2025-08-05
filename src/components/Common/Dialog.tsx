@@ -50,7 +50,7 @@ export const DialogHeader: FC<{ children: ReactNode }> = ({ children }) => (
 );
 
 export const DialogTitle: FC<{ children: ReactNode }> = ({ children}) => (
-  <h2 className="text-lg font-semibold text-gray-900">
+  <h2 className="text-lg font-semibold text-xl text-gray-1000">
     {children}
   </h2>
 );

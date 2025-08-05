@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 export const AdminLogin: React.FC = () => {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false)
@@ -20,8 +20,8 @@ export const AdminLogin: React.FC = () => {
         setError('');
         setLoading(true);
         try {
-            await signIn(username, password);
-            navigate('/dashboard', { state: { success: true } });
+            await signIn(email, password);
+            navigate('/account', { state: { success: true } });
         } catch (err: any) {
             setError(err.message);
             toast.error(err.message || 'Đăng nhập thất bại');
@@ -49,14 +49,14 @@ export const AdminLogin: React.FC = () => {
                     <h2 className="text-4xl font-extrabold text-green-600 mb-6">Welcome back!</h2>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="username" className="block text-gray-700 mb-1">Tên đăng nhập</label>
+                            <label htmlFor="email" className="block text-gray-700 mb-1">Tên đăng nhập</label>
                             <div className="relative">
                                 <EnvelopeIcon className="w-5 h-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                                 <input
-                                    id="username"
-                                    type="username"
-                                    value={username}
-                                    onChange={e => setUsername(e.target.value)}
+                                    id="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
                                     required
                                     placeholder="you@example.com"
                                     className="w-full pl-10 pr-4 py-3 border border-green-200 bg-green-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-200 transition"

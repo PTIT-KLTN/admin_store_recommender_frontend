@@ -72,12 +72,12 @@ const AccountManagementPage: React.FC = () => {
   const openNew = () => { setActiveAccount(undefined); setModalOpen(true); };
   const openEdit = (acc: Account) => { setActiveAccount(acc); setModalOpen(true); };
 
-  const handleSave = async (username: string, fullname: string) => {
+  const handleSave = async (email: string, fullname: string) => {
     try {
       if (activeAccount) {
-        await updateAccount(activeAccount.id, username, fullname);
+        await updateAccount(activeAccount.id, email, fullname);
       } else {
-        await createAccount(username, fullname);
+        await createAccount(email, fullname);
       }
       toast.success('Lưu thành công');
       setModalOpen(false);
@@ -100,7 +100,7 @@ const AccountManagementPage: React.FC = () => {
   const executeToggle = async (acc: Account) => {
     try {
       await toggleAccountEnabled(acc.id, !acc.is_enabled);
-      toast.success(`Tài khoản “${acc.username}” đã ${acc.is_enabled ? 'vô hiệu hóa' : 'kích hoạt'} thành công`);
+      toast.success(`Tài khoản “${acc.email}” đã ${acc.is_enabled ? 'vô hiệu hóa' : 'kích hoạt'} thành công`);
       load(currentPage);
     } catch (err: any) {
       console.error(err);
@@ -124,9 +124,13 @@ const AccountManagementPage: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Quản lý Tài khoản</h1>
+      <div className='p-4 ms-4 mt-4'>
+        <header className="pb-4 border-b border-gray-200">
+          <h1 className="text-3xl font-bold text-gray-800">Quản lý tài khoản admin</h1>
+        </header>
+      </div>
+      <div className="p-6 rounded-lg shadow-sm">
+        <div className="flex justify-end items-end mb-6">
           <button
             onClick={openNew}
             className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition"
@@ -135,13 +139,14 @@ const AccountManagementPage: React.FC = () => {
           </button>
         </div>
 
+
         <div className="mb-4 max-w-sm">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200"
-              placeholder="Tìm kiếm theo tên, username..."
+              placeholder="Tìm kiếm theo tên, email..."
               value={search}
               onChange={e => onSearchChange(e.target.value)}
             />
@@ -153,7 +158,7 @@ const AccountManagementPage: React.FC = () => {
             <thead className="bg-green-100">
               <tr>
                 <SortableTh label="Họ và tên" field="fullname" />
-                <SortableTh label="Username" field="username" />
+                <SortableTh label="Email" field="email" />
                 <SortableTh label="Vai trò" field="role" />
                 <SortableTh label="Trạng thái" field="is_enabled" />
                 <SortableTh label="Ngày tạo" field="created_at" />
@@ -173,7 +178,7 @@ const AccountManagementPage: React.FC = () => {
                     className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
                   >
                     <td className="px-4 py-3 text-gray-700">{acc.fullname}</td>
-                    <td className="px-4 py-3 text-gray-600 truncate" title={acc.username}>{acc.username}</td>
+                    <td className="px-4 py-3 text-gray-600 truncate" title={acc.email}>{acc.email}</td>
                     <td className="px-4 py-3 text-gray-700">{acc.role}</td>
                     <td className="px-4 py-3">
                       {acc.is_enabled ? (
@@ -243,7 +248,7 @@ const AccountManagementPage: React.FC = () => {
         <ConfirmModal
           open={confirmOpen}
           title="Xác nhận vô hiệu hóa"
-          message={`Bạn có chắc chắn muốn vô hiệu hóa tài khoản “${accountToToggle.username}” không?`}
+          message={`Bạn có chắc chắn muốn vô hiệu hóa tài khoản “${accountToToggle.email}” không?`}
           onConfirm={() => {
             setConfirmOpen(false);
             executeToggle(accountToToggle);

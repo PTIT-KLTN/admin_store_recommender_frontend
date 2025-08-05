@@ -9,7 +9,7 @@ interface DishCardProps {
 }
 
 const DishCard: React.FC<DishCardProps> = ({ dish, onEdit, onDelete }) => (
-  <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm w-full aspect-square">
+  <div className="bg-white rounded-xl shadow-md border-2 border-gray-200 p-4 flex flex-col justify-between overflow-hidden">
     {dish.image ? (
       <img
         src={dish.image}

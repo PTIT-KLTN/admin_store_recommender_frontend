@@ -119,14 +119,14 @@ const IngredientModal: React.FC<IngredientModalProps> = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {initialData ? 'Edit Ingredient' : 'Add Ingredient'}
+            {initialData ? 'Sửa nguyên liệu' : 'Thêm nguyên liệu'}
           </DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
           <div className="flex flex-col">
             {/* Image */}
-            <label className="font-semibold mb-1">Image URL</label>
+            <label className="font-semibold mb-1">URL ảnh</label>
             <input
               type="url"
               placeholder="Paste image URL..."
@@ -153,7 +153,7 @@ const IngredientModal: React.FC<IngredientModalProps> = ({
           {/* Form */}
           <div className="flex flex-col space-y-4">
             <div>
-              <label className="block font-semibold mb-1">Name</label>
+              <label className="block font-semibold mb-1">Tên</label>
               <input
                 type="text"
                 value={name}
@@ -164,13 +164,13 @@ const IngredientModal: React.FC<IngredientModalProps> = ({
             </div>
 
             <div>
-              <label className="block font-semibold mb-1">Unit</label>
+              <label className="block font-semibold mb-1">Đon vị</label>
               <select
                 value={unit}
                 onChange={e => setUnit(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-200"
               >
-                <option value="">-- Select unit --</option>
+                <option value="">-- Chọn đơn vị --</option>
                 {UNIT_OPTIONS.map(opt => (
                   <option key={opt} value={opt}>
                     {opt}
@@ -180,7 +180,7 @@ const IngredientModal: React.FC<IngredientModalProps> = ({
             </div>
 
             <div>
-              <label className="block font-semibold mb-1">Net Unit Value</label>
+              <label className="block font-semibold mb-1">Trọng lượng tính giá</label>
               <input
                 type="number"
                 value={netUnitValue}
@@ -193,13 +193,13 @@ const IngredientModal: React.FC<IngredientModalProps> = ({
             </div>
 
             <div>
-              <label className="block font-semibold mb-1">Category</label>
+              <label className="block font-semibold mb-1">Loại</label>
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-200"
               >
-                <option value="">-- Select category --</option>
+                <option value="">-- Chọn loại --</option>
                 {categories.map(cat => (
                   <option key={cat} value={cat}>
                     {cat}

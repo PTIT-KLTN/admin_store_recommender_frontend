@@ -193,7 +193,7 @@ const DishModal: React.FC<DishModalProps> = ({
             onClose();
             resetAll();
         } catch (err: any) {
-            console.error('Lỗi tạo dish:', err.message);
+            console.error('Lỗi tạo món ăn:', err.message);
             toast.error(err.message || 'Tạo món ăn thất bại. Vui lòng thử lại sau.');
         }
     };
@@ -202,14 +202,14 @@ const DishModal: React.FC<DishModalProps> = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{dish ? 'Edit Dish' : 'Add Dish'}</DialogTitle>
+                    <DialogTitle>{dish ? 'Sửa món ăn' : 'Thêm món ăn'}</DialogTitle>
                 </DialogHeader>
                 <div className="p-6 max-h-[75vh] overflow-y-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
-                        <label className="font-semibold mb-1 block">Image URL</label>
+                        <label className="font-semibold mb-1 block">URL ảnh</label>
                         <input
                             type="url"
-                            placeholder="Paste image URL..."
+                            placeholder="Dán ảnh món ăn ở đây ..."
                             value={previewUrl}
                             onChange={handleImageUrlChange}
                             className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200"
@@ -224,25 +224,25 @@ const DishModal: React.FC<DishModalProps> = ({
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-500">
-                                    Preview will appear here
+                                    Preview ảnh sẽ xuất hiện ở đây ...
                                 </div>
                             )}
                         </div>
 
-                        <label className="font-semibold mb-1">Vietnamese Name</label>
+                        <label className="font-semibold mb-1">Tên món ăn</label>
                         <input
                             type="text"
                             className="w-full mt-2 mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200"
-                            placeholder="Enter dish name..."
+                            placeholder="Nhập tên món ăn ..."
                             value={name}
                             onChange={e => setName(e.target.value)}
                         />
 
-                        <label className="font-semibold mb-1">Add Ingredient</label>
+                        <label className="font-semibold mb-1">Thêm nguyên liệu</label>
                         <input
                             type="text"
                             className="w-full mb-2 mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-200"
-                            placeholder="Search or create ingredient..."
+                            placeholder="Tìm kiếm hoặc tạo nguyên liệu ..."
                             value={newIng}
                             onChange={e => setNewIng(e.target.value)}
                         />
@@ -265,28 +265,28 @@ const DishModal: React.FC<DishModalProps> = ({
                                 onClick={() => setShowNewForm(true)}
                                 className="mb-4 text-blue-600 hover:underline"
                             >
-                                + Create new ingredient
+                                + Tạo nguyên liệu mới
                             </button>
                         )}
                         {showNewForm && (
                             <div className="bg-white shadow-md rounded-lg p-6 mb-4 grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Name */}
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-700 mb-1">Name</label>
-                                    <input placeholder="Enter ingredient name"
+                                    <label className="text-sm font-medium text-gray-700 mb-1">Tên</label>
+                                    <input placeholder="Nhập tên nguyên liệu"
                                         type="text" value={newName} onChange={e => setNewName(e.target.value)}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-200" />
                                 </div>
                                 {/* Image URL */}
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                                    <input placeholder="Paste ingredient image URL"
+                                    <label className="text-sm font-medium text-gray-700 mb-1">URL ảnh</label>
+                                    <input placeholder="Dán URL hình ảnh nguyên liệu"
                                         type="url" value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-200" />
                                 </div>
                                 {/* Unit */}
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-700 mb-1">Unit</label>
+                                    <label className="text-sm font-medium text-gray-700 mb-1">Đơn vị</label>
                                     <select value={newUnit} onChange={e => setNewUnit(e.target.value)}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-200">
                                         {UNIT_OPTIONS.map(u => <option key={u} value={u}>{u}</option>)}
@@ -294,14 +294,14 @@ const DishModal: React.FC<DishModalProps> = ({
                                 </div>
                                 {/* Value */}
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-700 mb-1">Value</label>
-                                    <input placeholder="Quantity per unit"
+                                    <label className="text-sm font-medium text-gray-700 mb-1">Trọng lượng tính</label>
+                                    <input placeholder="Số lượng trên mỗi đơn vị"
                                         type="number" value={newValue} onChange={e => setNewValue(e.target.value === '' ? '' : Number(e.target.value))}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-200" />
                                 </div>
                                 {/* Category */}
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-700 mb-1">Category</label>
+                                    <label className="text-sm font-medium text-gray-700 mb-1">Loại</label>
                                     <select value={newCategory} onChange={e => setNewCategory(e.target.value)}
                                         className="w-full px-3 py-2	border border-gray-300 rounded-md focus:ring-2 focus:ring-green-200">
                                         <option value="" disabled>Select category</option>
@@ -316,11 +316,11 @@ const DishModal: React.FC<DishModalProps> = ({
                             </div>
                         )}
                     </div>
-                    <div className="flex	flex-col border rounded-lg p-4">
-                        <h3 className="font-bold mb-4">Ingredients List</h3>
+                    <div className="flex flex-col border rounded-lg p-4">
+                        <h3 className="font-bold mb-4">Danh sách nguyên liệu</h3>
                         <div className="flex-1 overflow-auto space-y-2">
                             {ings.length === 0 ? (
-                                <p className="italic text-gray-500">No ingredients added.</p>
+                                <p className="italic text-gray-500">Chưa có nguyên liệu nào được thêm vào.</p>
                             ) : (
                                 ings.map((ing, idx) => (
                                     <div key={idx} className="flex	items-center bg-white p-2 rounded-lg border">
@@ -338,10 +338,10 @@ const DishModal: React.FC<DishModalProps> = ({
                         </div>
                         <div className="mt-6 flex justify-end space-x-3">
                             <button onClick={handleReset} className="inline-flex	items-center px-4 py-2	border border-gray-300 rounded-lg hover:bg-gray-100 transition">
-                                <RotateCw className="w-5 h-5 mr-1" /> Reset
+                                <RotateCw className="w-5 h-5 mr-1" /> Đặt lại
                             </button>
                             <button onClick={save} className="inline-flex	items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                                <Save className="w-5 h-5 mr-1" /> Save
+                                <Save className="w-5 h-5 mr-1" /> Lưu
                             </button>
                         </div>
                     </div>

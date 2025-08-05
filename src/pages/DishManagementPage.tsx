@@ -90,10 +90,15 @@ const DishManagementPage: React.FC = () => {
 
   return (
     <DashboardLayout>
+
+      <div className='p-4 ms-4 mt-4'>
+                <header className="pb-4 border-b border-gray-200">
+                    <h1 className="text-3xl font-bold text-gray-800">Quản lý danh sách món ăn</h1>
+                </header>
+            </div>
       <div className="p-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Dish List</h1>
+        <div className="flex justify-end items-center mb-6">
           <div className="flex items-center gap-4">
             <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -109,7 +114,7 @@ const DishManagementPage: React.FC = () => {
               onClick={handleAdd}
               className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition"
             >
-              <Plus className="w-5 h-5 mr-2" /> Add Dish
+              <Plus className="w-5 h-5 mr-2" /> Thêm món ăn
             </button>
           </div>
         </div>

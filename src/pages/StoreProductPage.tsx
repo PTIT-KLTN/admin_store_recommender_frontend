@@ -19,13 +19,16 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 
 interface Filters { page?: number; size?: number; category?: string; search?: string; chain?: string; min_price?: number; max_price?: number; }
 
-const fmtCurrency = (v: number) => v.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+const fmtCurrency = (v?: number) =>
+   v != null
+     ? v.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+     : '—';
 const fmtDate = (iso: string) => new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
 
 const renderChainLabel = (chain: string) => {
     const base = 'inline-block px-2 py-1 text-xs font-semibold rounded-full';
     if (chain.toLowerCase() === 'bhx') return <span className={`${base} bg-green-100 text-green-800`}>BHX</span>;
-    if (chain.toLowerCase() === 'winmart') return <span className={`${base} bg-blue-100 text-blue-800`}>Winmart</span>;
+    if (chain.toLowerCase() === 'wm') return <span className={`${base} bg-blue-100 text-blue-800`}>Winmart</span>;
     return <span className={`${base} bg-gray-100 text-gray-600`}>{chain}</span>;
 };
 
@@ -221,7 +224,7 @@ const StoreProductsPage: React.FC = () => {
                         <div className="flex justify-center items-center py-10"><div className="animate-spin rounded-full h-8 w-8 border-t-4 border-green-600" /></div>
                     ) : (
                         <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-100"><tr><th className="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Ảnh</th>
+                            <thead className="bg-gray-100"><tr><th className="px-4 py-2 text-left text-ms font-medium text-gray-800 uppercase">Ảnh</th>
                                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-800 uppercase">Tên</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-800 uppercase">Mã vạch</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-800 uppercase">Chuỗi</th>
@@ -249,7 +252,7 @@ const StoreProductsPage: React.FC = () => {
                                         </div>
                                         {p.discount_percent > 0 &&
                                             <div className="text-xs text-gray-400 line-through">{fmtCurrency(p.sys_price)}</div>}
-                                    </td><td className="px-4 py-2 text-center text-gray-700">{p.net_unit_value} {p.unit}</td>
+                                    </td><td className="px-4 py-2 text-center text-gray-700">{p.unit}</td>
                                     <td className="px-4 py-2 text-center">{p.promotion ?
                                         <span className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">{p.promotion}</span>
                                         : <span className="text-gray-400 text-xs">—</span>}</td>

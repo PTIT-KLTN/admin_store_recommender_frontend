@@ -11,23 +11,23 @@ const AccountPage: React.FC = () => {
 
     // 1) Hooks must always run in same order, before any early return:
     const [editing, setEditing] = useState(false);
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [fullname, setFullname] = useState('');
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-      if (user) {
-        setUsername(user.username);
-        setFullname(user.fullname);
-      }
+        if (user) {
+            setEmail(user.email);
+            setFullname(user.fullname);
+        }
     }, [user]);
 
     // 2) After hooks, guard on `user`:
     if (!user) {
-      return (
-        <div className="flex items-center justify-center min-h-screen">
-          {/* Your spinner or loading text */}
-        </div>
-      );
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                {/* Your spinner or loading text */}
+            </div>
+        );
     }
 
     // 3) Now it's safe to read `user` properties:
@@ -36,7 +36,7 @@ const AccountPage: React.FC = () => {
     const handleSave = async () => {
         setLoading(true);
         try {
-            const updated = await updateAdminProfile(user.id, { username, fullname });
+            const updated = await updateAdminProfile(user.id, { email, fullname });
             localStorage.setItem('admin_user', JSON.stringify(updated));
             toast.success('Thông tin đã được cập nhật.');
             setEditing(false);
@@ -50,7 +50,14 @@ const AccountPage: React.FC = () => {
 
     return (
         <DashboardLayout>
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className='p-4 ms-4 mt-4'>
+                <header className="pb-4 border-b border-gray-200">
+                    <h1 className="text-3xl font-bold text-gray-800">Trang cá nhân</h1>
+                </header>
+            </div>
+            <div className="flex items-center justify-center p-4">
+
+
                 <div className="bg-white bg-opacity-80 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
                     {/* Profile Panel */}
                     <div className="bg-gradient-to-br from-green-600 to-green-400 rounded-2xl p-6 text-center text-white shadow-inner">
@@ -75,13 +82,13 @@ const AccountPage: React.FC = () => {
                         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Chi tiết tài khoản</h2>
                         <div className="space-y-6">
                             <div className="relative">
-                                <label className="block text-gray-600 mb-1">Username</label>
+                                <label className="block text-gray-600 mb-1">Email</label>
                                 <div className="flex items-center border-b-2 border-gray-300 focus-within:border-green-500 transition">
                                     <User className="text-gray-400 mx-3" size={18} />
                                     <input
                                         type="text"
-                                        value={username}
-                                        onChange={e => setUsername(e.target.value)}
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
                                         disabled={!isSuperAdmin || !editing}
                                         className={`w-full px-2 py-2 bg-transparent focus:outline-none transition
                     ${!isSuperAdmin || !editing ? 'text-gray-500 cursor-not-allowed' : 'text-gray-800'}`}

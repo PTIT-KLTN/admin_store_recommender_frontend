@@ -7,21 +7,21 @@ import { Account } from '../../models/account';
 interface AccountModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (username: string, fullname: string) => Promise<void>;
+  onSave: (email: string, fullname: string) => Promise<void>;
   account?: Account;
 }
 
 const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSave, account }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [fullname, setFullname] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (account) {
-      setUsername(account.username || '');
+      setEmail(account.email || '');
       setFullname(account.fullname);
     } else {
-      setUsername('');
+      setEmail('');
       setFullname('');
     }
   }, [account, isOpen]);
@@ -30,7 +30,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSave, ac
     e.preventDefault();
     setLoading(true);
     try {
-      await onSave(username.trim(), fullname.trim());
+      await onSave(email.trim(), fullname.trim());
       onClose();
     } catch (err) {
       console.error(err);
@@ -51,16 +51,16 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, onSave, ac
 
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
             <div>
-              <label htmlFor="username" className="block mb-3 text-lg font-medium text-gray-700">
-                Tên đăng nhập
+              <label htmlFor="email" className="block mb-3 text-lg font-medium text-gray-700">
+                Email
               </label>
               <input
-                id="username"
+                id="email"
                 type="text"
                 className="w-full px-6 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-300"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                placeholder="Nhập tên đăng nhập"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Nhập email"
                 required
               />
             </div>

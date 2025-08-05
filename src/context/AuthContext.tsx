@@ -9,7 +9,7 @@ import { Admin } from '../models/admin';
 
 interface AuthContextType {
   user: Admin | null;
-  signIn: (username: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
 }
 
@@ -28,11 +28,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   // Sign in and store user + token
-  const signIn = async (username: string, password: string) => {
-    const { admin: a, access_token, refresh_token } = await apiLogin(username, password);
+  const signIn = async (email: string, password: string) => {
+    const { admin: a, access_token, refresh_token } = await apiLogin(email, password);
     const u: Admin = {
       id: a.id,
-      username: a.username,
+      email: a.email,
       fullname: a.fullname,
       role: a.role,
       is_enabled: a.is_enabled,

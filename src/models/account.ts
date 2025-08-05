@@ -1,6 +1,6 @@
 export interface Account {
   id: string;
-  username: string;
+  email: string;
   fullname: string;
   role: 'ADMIN' | 'SUPER_ADMIN';
   is_enabled: boolean;
