@@ -129,7 +129,7 @@ const AccountManagementPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-800">Quản lý tài khoản admin</h1>
         </header>
       </div>
-      <div className="p-6 rounded-lg shadow-sm">
+      <div className="p-8 rounded-lg shadow-sm">
         <div className="flex justify-end items-end mb-6">
           <button
             onClick={openNew}

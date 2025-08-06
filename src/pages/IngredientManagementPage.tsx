@@ -95,7 +95,7 @@ const IngredientManagementPage: React.FC = () => {
                     <h1 className="text-3xl font-bold text-gray-800">Quản lý danh sách nguyên liệu</h1>
                 </header>
             </div>
-            <div className="p-6 space-y-6">
+            <div className="p-8 space-y-6">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-end items-center gap-4">
                     <div className="flex items-center gap-4">

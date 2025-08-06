@@ -40,7 +40,7 @@ const App: React.FC = () => (
         <Route
           path="/accounts"
           element={
-            <ProtectedRoute allowedRoles={['super_admin']}>
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
               <AccountManagementPage />
             </ProtectedRoute>
           }
