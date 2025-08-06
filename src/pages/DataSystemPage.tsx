@@ -42,13 +42,13 @@ export const DataSystemPage: React.FC = () => {
     <DashboardLayout>
       <div className="p-8 space-y-6">
         <header className="pb-4 border-b border-gray-200">
-          <h1 className="text-3xl font-bold text-gray-800">Quản lý Hệ thống Thu thập Dữ liệu</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Hệ thống thu thập dữ liệu</h1>
         </header>
 
         <ToastContainer position="top-right" autoClose={3000} />
 
-        <div className="flex justify-between items-center mb-6">
-          <ServiceStatus />
+        <div className="flex justify-end items-center mb-6">
+          {/* <ServiceStatus /> */}
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}

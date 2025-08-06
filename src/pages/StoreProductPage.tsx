@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
     getStoreProducts,
@@ -20,9 +20,9 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 interface Filters { page?: number; size?: number; category?: string; search?: string; chain?: string; min_price?: number; max_price?: number; }
 
 const fmtCurrency = (v?: number) =>
-   v != null
-     ? v.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-     : '—';
+    v != null
+        ? v.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+        : '—';
 const fmtDate = (iso: string) => new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
 
 const renderChainLabel = (chain: string) => {
@@ -57,6 +57,16 @@ const StoreProductsPage: React.FC = () => {
     const { data: catsData, isLoading: catsLoading, error: catsError } = categoriesQuery;
     const { data: prodData, isLoading: prodLoading, isFetching: prodFetching, error: prodError } = productsQuery;
 
+    const { pathname } = useLocation()
+    const match = pathname.match(/\/store\/(\d+)/)
+    const storeId = match ? match[1] : ''
+
+    useEffect(() => {
+        if (storeId) {
+            document.title = `Sản phẩm của cửa hàng ${storeId}`
+        }
+    }, [storeId])
+
     useEffect(() => { if (statsError || catsError || prodError) toast.error('Lỗi tải dữ liệu, vui lòng thử lại.'); }, [statsError, catsError, prodError]);
 
     const chartData = useMemo(() => {
@@ -68,7 +78,15 @@ const StoreProductsPage: React.FC = () => {
         );
     }, [stats]);
 
-    if (statsLoading || catsLoading) return <FullPageSpinner />;
+    if (statsLoading || catsLoading) {
+        return (
+            <DashboardLayout>
+                <div className="flex items-center justify-center h-screen">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-green-600" />
+                </div>
+            </DashboardLayout>
+        );
+    }
     if (!stats || !catsData || !prodData) return null;
 
     const { pagination, products } = prodData;
@@ -107,8 +125,13 @@ const StoreProductsPage: React.FC = () => {
 
     return (
         <DashboardLayout>
+            <div className='p-4 ms-4 mt-4'>
+                <header className="pb-4 border-b border-gray-200">
+                    <h1 className="text-3xl font-bold text-gray-800">Cửa hàng #{storeId}</h1>
+                </header>
+            </div>
             <ToastContainer position="top-right" autoClose={3000} />
-            <div className="space-y-6">
+            <div className="pt-2 ps-8 pe-8 pb-8 space-y-6">
                 {/* Nút trở về trang quản lý dữ liệu */}
                 <div className="flex items-center">
                     <button
@@ -252,10 +275,12 @@ const StoreProductsPage: React.FC = () => {
                                         </div>
                                         {p.discount_percent > 0 &&
                                             <div className="text-xs text-gray-400 line-through">{fmtCurrency(p.sys_price)}</div>}
-                                    </td><td className="px-4 py-2 text-center text-gray-700">{p.unit}</td>
+                                    </td>
+                                    <td className="px-4 py-2 text-center text-gray-700">{p.unit}</td>
                                     <td className="px-4 py-2 text-center">{p.promotion ?
                                         <span className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">{p.promotion}</span>
-                                        : <span className="text-gray-400 text-xs">—</span>}</td>
+                                        : <span className="text-gray-400 text-xs">—</span>}
+                                    </td>
                                     <td className="px-4 py-2 text-center text-xs text-gray-500">{fmtDate(p.crawled_at)}</td>
                                 </tr>))}
                             </tbody>

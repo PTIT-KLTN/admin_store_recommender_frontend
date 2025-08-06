@@ -50,6 +50,7 @@ const DishModal: React.FC<DishModalProps> = ({
     const [newCategory, setNewCategory] = useState('');
     const [newImageUrl, setNewImageUrl] = useState('');
     const [categories, setCategories] = useState<string[]>([]);
+    const [isSaving, setIsSaving] = useState(false);
 
     // Load on open / edit
     useEffect(() => {
@@ -61,7 +62,7 @@ const DishModal: React.FC<DishModalProps> = ({
             } else {
                 resetAll();
             }
-            fetchAllIngredients(0, undefined, 1000)
+            fetchAllIngredients(0, undefined, 5000)
                 .then(res => setAllIngredients(res.ingredients))
                 .catch(err => console.error(err));
             fetchIngCategories()
@@ -92,13 +93,13 @@ const DishModal: React.FC<DishModalProps> = ({
     }, [newIng, allIngredients]);
 
     const mapToDishIngredient = (ing: ServiceIngredient): DishIngredient => ({
-        vietnamese_name: ing.name,              
-        ingredient_name: ing.name_en,                
-        net_unit_value: ing.net_unit_value, 
+        vietnamese_name: ing.name,
+        ingredient_name: ing.name_en,
+        net_unit_value: ing.net_unit_value,
         unit: ing.unit,
         category: ing.category,
         image: ing.image,
-        });
+    });
 
     const addExisting = (ing: ServiceIngredient) => {
         setIngs(prev => [...prev, mapToDishIngredient(ing)]);
@@ -120,7 +121,7 @@ const DishModal: React.FC<DishModalProps> = ({
         };
         try {
             await createNewIngredient(payload);
-            const resp = await fetchAllIngredients(0);
+            const resp = await fetchAllIngredients(0, undefined, 5000);
             setAllIngredients(resp.ingredients);
             const created = resp.ingredients.find(i => i.name === newName);
             if (created) setIngs(prev => [...prev, mapToDishIngredient(created)]);
@@ -136,7 +137,7 @@ const DishModal: React.FC<DishModalProps> = ({
             toast.success('Tạo nguyên liệu mới thành công!');
         } catch (err: any) {
             console.error(err);
-            toast.error('Lỗi tạo nguyên liệu mới.');
+            toast.error(err.message || 'Lỗi tạo nguyên liệu mới.');
         }
     };
 
@@ -195,6 +196,8 @@ const DishModal: React.FC<DishModalProps> = ({
         } catch (err: any) {
             console.error('Lỗi tạo món ăn:', err.message);
             toast.error(err.message || 'Tạo món ăn thất bại. Vui lòng thử lại sau.');
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -340,9 +343,27 @@ const DishModal: React.FC<DishModalProps> = ({
                             <button onClick={handleReset} className="inline-flex	items-center px-4 py-2	border border-gray-300 rounded-lg hover:bg-gray-100 transition">
                                 <RotateCw className="w-5 h-5 mr-1" /> Đặt lại
                             </button>
-                            <button onClick={save} className="inline-flex	items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                                <Save className="w-5 h-5 mr-1" /> Lưu
+                            <button
+                                onClick={save}
+                                disabled={isSaving}
+                                className={`inline-flex items-center px-4 py-2 rounded transition
+                                    ${isSaving
+                                        ? 'bg-gray-300 cursor-not-allowed'
+                                        : 'bg-green-600 hover:bg-green-700 text-white'}`}
+                            >
+                                {isSaving ? (
+                                    <>
+                                        <RotateCw className="w-5 h-5 mr-1 animate-spin" />
+                                        Đang lưu...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="w-5 h-5 mr-1" />
+                                        Save
+                                    </>
+                                )}
                             </button>
+
                         </div>
                     </div>
                 </div>

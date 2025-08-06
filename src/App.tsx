@@ -1,6 +1,5 @@
 // App.tsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
@@ -22,10 +21,8 @@ const queryClient = new QueryClient();
 
 const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
-    {/* ToastContainer có thể nằm ở đây chung với provider */}
-    <ToastContainer position="bottom-right" autoClose={3000} />
+    <ToastContainer position="top-right" autoClose={3000} />
 
-    {/* BrowserRouter bao lấy tất cả Routes */}
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<AdminLogin />} />

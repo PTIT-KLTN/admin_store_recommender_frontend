@@ -8,9 +8,6 @@ async function handleResponse(res: Response) {
     return json;
 }
 
-/**
- * Sends login request and returns tokens + admin info
- */
 export async function login(
     email: string,
     password: string
@@ -18,7 +15,7 @@ export async function login(
     const res = await fetcher(`${BASE_URL}/admin_auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
+            // 'ngrok-skip-browser-warning': 'true'
          },
         body: JSON.stringify({ email, password }),
     });
@@ -34,7 +31,7 @@ export async function refreshToken(): Promise<{
     const res = await fetch(`${BASE_URL}/admin_auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
+            // 'ngrok-skip-browser-warning': 'true'
          },
         body: JSON.stringify({ refresh_token: token }),
     });

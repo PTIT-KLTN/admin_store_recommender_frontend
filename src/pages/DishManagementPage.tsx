@@ -92,11 +92,11 @@ const DishManagementPage: React.FC = () => {
     <DashboardLayout>
 
       <div className='p-4 ms-4 mt-4'>
-                <header className="pb-4 border-b border-gray-200">
-                    <h1 className="text-3xl font-bold text-gray-800">Quản lý danh sách món ăn</h1>
-                </header>
-            </div>
-      <div className="p-8">
+        <header className="pb-4 border-b border-gray-200">
+          <h1 className="text-3xl font-bold text-gray-800">Quản lý danh sách món ăn</h1>
+        </header>
+      </div>
+      <div className="pt-2 ps-8 pe-8 pb-8">
         {/* Header */}
         <div className="flex justify-end items-center mb-6">
           <div className="flex items-center gap-4">

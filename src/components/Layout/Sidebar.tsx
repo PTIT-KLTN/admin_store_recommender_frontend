@@ -10,18 +10,18 @@ import {
   PowerIcon as LogoutIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
+  ChartBarIcon,
 } from '@heroicons/react/24/outline';
 import { AuthContext } from '../../context/AuthContext';
 
 const allItems = [
+  { name: 'Dashboard', to: '/dashboard', Icon: ChartBarIcon }, 
   { name: 'Thông tin người dùng', to: '/account', Icon: UserCircleIcon },
   { name: 'Quản lý tài khoản', to: '/accounts', Icon: UsersIcon },
   { name: 'Quản lý nguyên liệu', to: '/ingredients', Icon: CubeIcon },
   { name: 'Quản lý món ăn', to: '/dishes', Icon: ClipboardIcon },
   { name: 'Hệ thống dữ liệu', to: '/data-system', Icon: CloudIcon },
 ];
-
-
 
 export const Sidebar: React.FC = () => {
   const { pathname } = useLocation();

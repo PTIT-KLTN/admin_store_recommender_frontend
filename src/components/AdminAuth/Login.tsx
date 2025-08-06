@@ -21,7 +21,7 @@ export const AdminLogin: React.FC = () => {
         setLoading(true);
         try {
             await signIn(email, password);
-            navigate('/account', { state: { success: true } });
+            navigate('/dashboard', { state: { success: true } });
         } catch (err: any) {
             setError(err.message);
             toast.error(err.message || 'Đăng nhập thất bại');
@@ -33,12 +33,10 @@ export const AdminLogin: React.FC = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-green-200 to-green-50 p-6">
-            {/* Decorative Blobs */}
             <div className="absolute top-10 left-10 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-2xl opacity-60 animate-pulse" />
             <div className="absolute bottom-20 right-20 w-64 h-64 bg-green-200 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-pulse animation-delay-2000" />
 
             <div className="relative bg-white rounded-3xl shadow-2xl max-w-4xl w-full flex overflow-hidden">
-                {/* Illustration */}
                 <div
                     className="hidden lg:flex lg:w-1/2 bg-cover bg-center"
                     style={{ backgroundImage: `url(${loginImage})` }}

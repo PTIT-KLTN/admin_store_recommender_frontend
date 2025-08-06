@@ -86,7 +86,16 @@ const IngredientManagementPage: React.FC = () => {
     };
 
 
-    if (loading) return <FullPageSpinner />;
+    if (loading) {
+        return (
+            <DashboardLayout>
+                <div className="flex items-center justify-center h-screen">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-green-600" />
+                </div>
+            </DashboardLayout>
+        );
+    }
+
 
     return (
         <DashboardLayout>
@@ -95,7 +104,7 @@ const IngredientManagementPage: React.FC = () => {
                     <h1 className="text-3xl font-bold text-gray-800">Quản lý danh sách nguyên liệu</h1>
                 </header>
             </div>
-            <div className="p-8 space-y-6">
+            <div className="pt-2 ps-8 pe-8 pb-8 space-y-6">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-end items-center gap-4">
                     <div className="flex items-center gap-4">

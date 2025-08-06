@@ -168,9 +168,9 @@ const AccountManagementPage: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {loading ? (
-                <tr>
-                  <td colSpan={7} className="p-6 text-center text-gray-500">Đang tải...</td>
-                </tr>
+                <div className="flex justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-green-600" />
+                </div>
               ) : (
                 accounts.map(acc => (
                   <tr

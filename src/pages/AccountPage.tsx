@@ -21,12 +21,13 @@ const AccountPage: React.FC = () => {
         }
     }, [user]);
 
-    // 2) After hooks, guard on `user`:
     if (!user) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                {/* Your spinner or loading text */}
-            </div>
+            <DashboardLayout>
+                <div className="flex items-center justify-center h-screen">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-green-600" />
+                </div>
+            </DashboardLayout>
         );
     }
 
