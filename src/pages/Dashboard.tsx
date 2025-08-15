@@ -15,6 +15,7 @@ import {
   Summary,
   TrendItem,
   RecentItem,
+  CrawlItem,
   fetchSummary,
   fetchUserTrend,
   fetchRecentDishes,
@@ -25,7 +26,7 @@ const DashboardPage: React.FC = () => {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [trend, setTrend] = useState<TrendItem[]>([]);
   const [recentDishes, setRecentDishes] = useState<RecentItem[]>([]);
-  const [recentCrawls, setRecentCrawls] = useState<RecentItem[]>([]);
+  const [recentCrawls, setRecentCrawls] = useState<CrawlItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { user } = useContext(AuthContext)!;
@@ -105,11 +106,21 @@ const DashboardPage: React.FC = () => {
               <RecentList
                 title="5 tác vụ crawl mới nhất"
                 items={recentCrawls}
-                renderItem={i => (
-                  <span className={(i as any).result.status === 'success' ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
-                    {(i as any).result.store_name || i._id} – {i.status}
-                  </span>
-                )}
+                renderItem={item => {
+                  const crawlStatus = item.result?.status || item.status;
+                  const storeName = item.result?.store_name || item._id;
+                  const className =
+                    crawlStatus === 'success' ? 'text-green-600 font-medium' :
+                      crawlStatus === 'queued' ? 'text-yellow-600 font-medium' :
+                        crawlStatus === 'processing' ? 'text-blue-600 font-medium' :
+                          'text-red-600 font-medium'
+
+                  return (
+                    <span className={className}>
+                      {storeName} – {crawlStatus}
+                    </span>
+                  );
+                }}
                 viewLink="/crawls"
                 accent="blue"
               />

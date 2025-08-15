@@ -14,7 +14,7 @@ const ForgotPasswordRequest: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/admin/forgot-password`, {
+      const res = await fetch(`${BASE_URL}/admin-auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

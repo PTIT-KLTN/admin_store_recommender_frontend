@@ -9,11 +9,12 @@ import { DashboardLayout } from '../components/Layout/DashboardLayout';
 const AccountPage: React.FC = () => {
     const { user } = useContext(AuthContext)! as { user: Admin | null };
 
-    // 1) Hooks must always run in same order, before any early return:
     const [editing, setEditing] = useState(false);
     const [email, setEmail] = useState('');
     const [fullname, setFullname] = useState('');
+    const [emailError, setEmailError] = useState('');
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (user) {
             setEmail(user.email);
@@ -31,10 +32,29 @@ const AccountPage: React.FC = () => {
         );
     }
 
-    // 3) Now it's safe to read `user` properties:
     const isSuperAdmin = user.role === 'SUPER_ADMIN';
 
+    const validateEmail = (value: string) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regex.test(value)) {
+            setEmailError('Email không hợp lệ.');
+        } else {
+            setEmailError('');
+        }
+    };
+
+    const handleEmailChange = (value: string) => {
+        setEmail(value);
+        validateEmail(value);
+    };
+
     const handleSave = async () => {
+        // final check
+        validateEmail(email);
+        if (emailError) {
+            toast.error('Vui lòng sửa lỗi trước khi lưu.');
+            return;
+        }
         setLoading(true);
         try {
             const updated = await updateAdminProfile(user.id, { email, fullname });
@@ -57,8 +77,6 @@ const AccountPage: React.FC = () => {
                 </header>
             </div>
             <div className="flex items-center justify-center p-4">
-
-
                 <div className="bg-white bg-opacity-80 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
                     {/* Profile Panel */}
                     <div className="bg-gradient-to-br from-green-600 to-green-400 rounded-2xl p-6 text-center text-white shadow-inner">
@@ -89,12 +107,15 @@ const AccountPage: React.FC = () => {
                                     <input
                                         type="text"
                                         value={email}
-                                        onChange={e => setEmail(e.target.value)}
+                                        onChange={e => handleEmailChange(e.target.value)}
                                         disabled={!isSuperAdmin || !editing}
                                         className={`w-full px-2 py-2 bg-transparent focus:outline-none transition
-                    ${!isSuperAdmin || !editing ? 'text-gray-500 cursor-not-allowed' : 'text-gray-800'}`}
+                        ${!isSuperAdmin || !editing ? 'text-gray-500 cursor-not-allowed' : 'text-gray-800'}`}
                                     />
                                 </div>
+                                {emailError && (
+                                    <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                                )}
                             </div>
 
                             <div className="relative">
@@ -107,7 +128,7 @@ const AccountPage: React.FC = () => {
                                         onChange={e => setFullname(e.target.value)}
                                         disabled={!isSuperAdmin || !editing}
                                         className={`w-full px-2 py-2 bg-transparent focus:outline-none transition
-                    ${!isSuperAdmin || !editing ? 'text-gray-500 cursor-not-allowed' : 'text-gray-800'}`}
+                        ${!isSuperAdmin || !editing ? 'text-gray-500 cursor-not-allowed' : 'text-gray-800'}`}
                                     />
                                 </div>
                             </div>
@@ -129,14 +150,19 @@ const AccountPage: React.FC = () => {
                         {isSuperAdmin && editing && (
                             <div className="mt-8 flex justify-end space-x-4">
                                 <button
-                                    onClick={() => setEditing(false)}
+                                    onClick={() => {
+                                        setEmail(user.email);
+                                        setFullname(user.fullname);
+                                        setEmailError('');
+                                        setEditing(false);
+                                    }}
                                     className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
                                 >
                                     Hủy
                                 </button>
                                 <button
                                     onClick={handleSave}
-                                    disabled={loading}
+                                    disabled={loading || Boolean(emailError)}
                                     className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
                                 >
                                     {loading ? 'Đang lưu...' : 'Lưu thay đổi'}

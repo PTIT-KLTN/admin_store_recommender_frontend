@@ -89,12 +89,20 @@ export const CreateCrawlTaskForm: React.FC<CreateCrawlTaskFormProps> = ({ onSucc
             }}
         >
             <div className="bg-white w-full max-w-md rounded-xl shadow-lg overflow-visible">
-                <header className="bg-green-600 p-4 flex justify-between items-center">
+                <header
+                    className="bg-green-600 p-4 flex justify-between items-center rounded-t-lg"
+                >
                     <h2 className="text-white text-lg font-bold">Tạo Crawl Task</h2>
                     {onCancel && (
-                        <button onClick={onCancel} className="text-white hover:text-gray-200 transition">✕</button>
+                        <button
+                            onClick={onCancel}
+                            className="text-white hover:text-gray-200 transition"
+                        >
+                            ✕
+                        </button>
                     )}
                 </header>
+
 
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="mb-4">
@@ -106,8 +114,8 @@ export const CreateCrawlTaskForm: React.FC<CreateCrawlTaskFormProps> = ({ onSucc
                                     type="button"
                                     onClick={() => setSelectedChain(c)}
                                     className={`flex-1 text-center py-2 rounded-lg transition ${selectedChain === c
-                                            ? 'bg-green-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        ? 'bg-green-600 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
                                     {c === 'WM' ? 'WinMart' : 'Bách Hóa Xanh'}

@@ -225,20 +225,21 @@ const StoreProductsPage: React.FC = () => {
                         <div className="flex-1 flex flex-col"><label className="mb-1 text-sm font-medium text-gray-600">Giá từ</label><input type="number" placeholder="Min" value={searchParams.get('min_price') || ''} onChange={e => applyFilter({ min_price: e.target.value ? Number(e.target.value) : undefined, page: 0 })} className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" /></div>
                         <div className="flex-1 flex flex-col"><label className="mb-1 text-sm font-medium text-gray-600">Giá đến</label><input type="number" placeholder="Max" value={searchParams.get('max_price') || ''} onChange={e => applyFilter({ max_price: e.target.value ? Number(e.target.value) : undefined, page: 0 })} className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" /></div>
                     </div>
-                    <div className='flex justify-content text-end'>
+                    <div className="flex justify-end text-end">
                         <button
                             onClick={() => applyFilter({ search: searchTerm, page: 0 })}
-                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+                            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg min-w-[100px] text-center"
                         >
                             Tìm
                         </button>
                         <button
                             onClick={handleReset}
-                            className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg"
+                            className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg min-w-[100px] text-center"
                         >
-                            Reset
+                            Đặt lại
                         </button>
                     </div>
+
                 </div>
 
                 {/* Products Table */}

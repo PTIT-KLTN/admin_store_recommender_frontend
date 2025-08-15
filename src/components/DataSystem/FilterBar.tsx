@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Layers, Calendar } from 'lucide-react';
+import { Search, Layers, Calendar, RotateCw } from 'lucide-react';
 
 interface FilterBarProps {
   chain: string;
@@ -9,10 +9,20 @@ interface FilterBarProps {
   dateTo: string;
   onChange: (field: 'chain' | 'storeId' | 'status' | 'dateFrom' | 'dateTo', value: string) => void;
   onSearch: () => void;
+  onReset: () => void;
 }
 
-export const FilterBar: React.FC<FilterBarProps> = ({ chain, storeId, status, dateFrom, dateTo, onChange, onSearch }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+export const FilterBar: React.FC<FilterBarProps> = ({
+  chain,
+  storeId,
+  status,
+  dateFrom,
+  dateTo,
+  onChange,
+  onSearch,
+  onReset,
+}) => (
+  <div className="bg-white pe-6 pb-6 ps-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
     {/* Chain */}
     <div className="flex flex-col">
       <label className="text-sm font-medium text-gray-600 flex items-center gap-1 mb-2">
@@ -52,9 +62,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({ chain, storeId, status, da
         className="mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-300 focus:border-transparent"
       >
         <option value="">Tất cả</option>
-        <option value="pending">Đang chờ</option>
-        <option value="running">Đang chạy</option>
-        <option value="done">Hoàn thành</option>
+        <option value="queued">Đang chờ</option>
+        <option value="processing">Đang chạy</option>
+        <option value="completed">Hoàn thành</option>
       </select>
     </div>
 
@@ -84,8 +94,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({ chain, storeId, status, da
       </div>
     </div>
 
-    {/* Search Button */}
-    <div className="flex justify-end lg:col-span-5">
+    {/* Buttons */}
+    <div className="flex justify-end lg:col-span-5 space-x-2">
+      <button
+        onClick={onReset}
+        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg shadow transition"
+      >
+        <RotateCw size={16} /> Đặt lại
+      </button>
       <button
         onClick={onSearch}
         className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow transition"

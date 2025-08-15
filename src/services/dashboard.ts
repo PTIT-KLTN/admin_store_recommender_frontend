@@ -27,6 +27,15 @@ export interface RecentItem {
   status?: string;
 }
 
+export interface CrawlItem {
+  _id: string;
+  status: string;
+  result?: {
+    status: string;
+    store_name?: string;
+  };
+}
+
 export async function fetchSummary(): Promise<Summary> {
   const res = await fetch(`${BASE_URL}/report/summary`, {
     headers: getHeaders()

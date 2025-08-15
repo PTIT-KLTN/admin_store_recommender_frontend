@@ -1,5 +1,5 @@
 // src/components/AdminAuth/Login.tsx
-import React, { useState, FormEvent, useContext } from 'react';
+import React, { useState, FormEvent, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import loginImage from '../../assets/images/login.jpg';
@@ -13,7 +13,14 @@ export const AdminLogin: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false)
-    const { signIn } = useContext(AuthContext)!;
+    const { signIn, user } = useContext(AuthContext)!;
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (user || token) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [user, navigate]);
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -91,7 +98,7 @@ export const AdminLogin: React.FC = () => {
                                     focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50
                                 disabled:opacity-50 disabled:cursor-not-allowed
                                 "
-                                >
+                        >
                             {loading && (
                                 <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
                             )}
