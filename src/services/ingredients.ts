@@ -58,7 +58,7 @@ export async function createIngredient(data: IngredientPayload): Promise<void> {
   const res = await fetch(`${BASE_URL}/admin/ingredients`, {
     method: 'POST',
     headers: {
-      //'ngrok-skip-browser-warning': 'true',
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json', 
       Authorization: `Bearer ${token}`,
     },
@@ -72,7 +72,7 @@ export async function updateIngredient(id: string, data: IngredientPayload): Pro
   const res = await fetch(`${BASE_URL}/admin/ingredients/${id}`, {
     method: 'PUT',
     headers: {
-      //'ngrok-skip-browser-warning': 'true',
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json', 
       Authorization: `Bearer ${token}`,
     },
@@ -86,7 +86,7 @@ export async function deleteIngredient(id: string): Promise<void> {
     const token = localStorage.getItem('access_token');
     const res = await fetch(`${BASE_URL}/admin/ingredients/${id}`, {
         method: 'DELETE',
-        headers: { //'ngrok-skip-browser-warning': 'true',
+        headers: { 'ngrok-skip-browser-warning': 'true',
           Authorization: `Bearer ${token}` },
     });
     await handleResponse(res);

@@ -14,9 +14,11 @@ const ForgotPasswordRequest: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/admin-auth/forgot-password`, {
+      const res = await fetch(`${BASE_URL}/admin_auth/forgot-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          'ngrok-skip-browser-warning': 'true'
+         },
         body: JSON.stringify({ email }),
       });
       if (!res.ok) throw new Error((await res.json()).message || "Lỗi gửi mail");

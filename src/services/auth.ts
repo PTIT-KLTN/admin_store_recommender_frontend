@@ -15,7 +15,7 @@ export async function login(
     const res = await fetcher(`${BASE_URL}/admin_auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
-            // 'ngrok-skip-browser-warning': 'true'
+            'ngrok-skip-browser-warning': 'true'
          },
         body: JSON.stringify({ email, password }),
     });
@@ -31,22 +31,11 @@ export async function refreshToken(): Promise<{
     const res = await fetch(`${BASE_URL}/admin_auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
-            // 'ngrok-skip-browser-warning': 'true'
+            'ngrok-skip-browser-warning': 'true'
          },
         body: JSON.stringify({ refresh_token: token }),
     });
     return handleResponse(res);
-}
-
-async function fetchWithToken(input: RequestInfo, init: RequestInit = {}) {
-    const token = localStorage.getItem('access_token');
-    const headers = {
-        'Content-Type': 'application/json',
-        //'ngrok-skip-browser-warning': 'true',
-        ...(init.headers || {}),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-    return fetch(input, { ...init, headers });
 }
 
 export async function updateAdminProfile(
@@ -58,7 +47,7 @@ export async function updateAdminProfile(
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            //'ngrok-skip-browser-warning': 'true',
+            'ngrok-skip-browser-warning': 'true',
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),

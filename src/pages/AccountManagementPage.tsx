@@ -72,21 +72,20 @@ const AccountManagementPage: React.FC = () => {
   const openNew = () => { setActiveAccount(undefined); setModalOpen(true); };
   const openEdit = (acc: Account) => { setActiveAccount(acc); setModalOpen(true); };
 
-  const handleSave = async (email: string, fullname: string) => {
-    try {
-      if (activeAccount) {
-        await updateAccount(activeAccount.id, email, fullname);
-      } else {
-        await createAccount(email, fullname);
-      }
-      toast.success('Lưu thành công');
-      setModalOpen(false);
-      load(0);
-    } catch (err: any) {
-      console.error(err);
-      toast.error(err.message || 'Lưu thất bại');
+const handleSave = async (email: string, fullname: string) => {
+  try {
+    if (activeAccount) {
+      await updateAccount(activeAccount.id, email, fullname);
+    } else {
+      await createAccount(email, fullname);
     }
-  };
+    toast.success('Lưu thành công');
+    setModalOpen(false);  
+    await load(0);
+  } catch (err) {
+    throw err;             
+  }
+};
 
   const handleToggleClick = (acc: Account) => {
     if (acc.is_enabled) {

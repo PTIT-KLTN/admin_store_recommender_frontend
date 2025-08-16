@@ -44,9 +44,11 @@ const ResetPassword: React.FC = () => {
     if (!canSubmit) return;
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/admin-auth/reset-password`, {
+      const res = await fetch(`${BASE_URL}/admin_auth/reset-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          'ngrok-skip-browser-warning': 'true'
+         },
         body: JSON.stringify({ token, new_password: newPassword, role }),
       });
       if (!res.ok) {

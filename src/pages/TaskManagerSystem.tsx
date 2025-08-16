@@ -5,6 +5,7 @@ import { TaskTable } from '../components/DataSystem/TaskTable';
 import { TaskDetailModal } from '../components/DataSystem/TaskDetailModal';
 import { getTasks, Task } from '../services/dataSystem';
 import { CreateCrawlTaskForm } from '../components/DataSystem/CreateTaskForm';
+import { toast } from 'react-toastify';
 
 export const TaskManagementSection: React.FC = () => {
   const [filterChain, setFilterChain] = useState<string>('');
@@ -16,31 +17,43 @@ export const TaskManagementSection: React.FC = () => {
   const [isPolling, setIsPolling] = useState<boolean>(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
-  const { data: tasks = [], isFetching, refetch } = useQuery<Task[], Error, Task[]>({
+  const {
+    data: tasks = [],
+    isFetching,
+    refetch,
+  } = useQuery<Task[], Error, Task[]>({
     queryKey: ['tasks', filterChain, filterStoreId, status, dateFrom, dateTo],
     queryFn: async () => {
-      const data = await getTasks();
-      let filtered = data;
+      try {
+        const data = await getTasks(); // có thể throw
+        let filtered = Array.isArray(data) ? data : [];
 
-      if (filterChain) filtered = filtered.filter(t => t.chain === filterChain);
+        if (filterChain) filtered = filtered.filter(t => t.chain === filterChain);
 
-      if (filterStoreId) {
-        filtered = filtered.filter(t => String(t.store_id).includes(filterStoreId));
+        if (filterStoreId) {
+          filtered = filtered.filter(t => String(t.store_id).includes(filterStoreId));
+        }
+
+        if (status) {
+          filtered = filtered.filter(
+            t => (t.status || '').toLowerCase() === status.toLowerCase()
+          );
+        }
+
+        if (dateFrom) filtered = filtered.filter(t => new Date(t.created_at) >= new Date(dateFrom));
+        if (dateTo)   filtered = filtered.filter(t => new Date(t.created_at) <= new Date(dateTo));
+
+        return filtered;
+      } catch (e: any) {
+        toast.error(e?.message || 'Không tải được danh sách task');
+        // Trả về mảng rỗng để UI vẫn render
+        return [];
       }
-
-      if (status) {
-        filtered = filtered.filter(
-          t => (t.status || '').toLowerCase() === status.toLowerCase()
-        );
-      }
-
-      if (dateFrom) filtered = filtered.filter(t => new Date(t.created_at) >= new Date(dateFrom));
-      if (dateTo)   filtered = filtered.filter(t => new Date(t.created_at) <= new Date(dateTo));
-
-      return filtered;
     },
     refetchInterval: isPolling ? 5000 : false,
   });
+
+  const showEmpty = !isFetching && (!tasks || tasks.length === 0);
 
   return (
     <div className="space-y-6">
@@ -66,6 +79,7 @@ export const TaskManagementSection: React.FC = () => {
             setStatus('');
             setDateFrom('');
             setDateTo('');
+            refetch();
           }}
         />
       </div>
@@ -96,6 +110,20 @@ export const TaskManagementSection: React.FC = () => {
 
         {isFetching ? (
           <p className="text-center text-gray-500 pb-4">Đang tải danh sách…</p>
+        ) : showEmpty ? (
+          <div className="px-4 pb-6">
+            <div className="border border-dashed rounded-lg p-6 text-center text-gray-500 italic">
+              Chưa có dữ liệu task để hiển thị.
+              <div className="mt-3">
+                <button
+                  className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
+                  onClick={() => refetch()}
+                >
+                  Tải lại
+                </button>
+              </div>
+            </div>
+          </div>
         ) : (
           <TaskTable tasks={tasks} onView={setSelectedTaskId} />
         )}
@@ -106,6 +134,7 @@ export const TaskManagementSection: React.FC = () => {
           onCancel={() => setIsModalOpen(false)}
           onSuccess={() => {
             setIsModalOpen(false);
+            toast.success('Tạo task crawl thành công');
             refetch();
           }}
         />

@@ -7,6 +7,8 @@ function getHeaders(isJson: boolean = true): HeadersInit {
   if (isJson) headers['Content-Type'] = 'application/json';
   const token = localStorage.getItem('access_token');
   if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  headers['ngrok-skip-browser-warning'] = 'true';
   return headers;
 }
 

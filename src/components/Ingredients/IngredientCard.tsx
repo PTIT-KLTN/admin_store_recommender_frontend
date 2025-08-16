@@ -18,7 +18,7 @@ const IngredientCard: React.FC<IngredientCardProps> = ({ ingredient, onEdit, onD
     <h3 className="font-semibold text-gray-800 truncate mb-2" title={ingredient.name}>
       {ingredient.name}
     </h3>
-    {ingredient.net_unit_value != null && (
+    {ingredient.unit != null && (
       <div className="text-right text-sm text-gray-600 mb-4">
         {ingredient.unit}
       </div>

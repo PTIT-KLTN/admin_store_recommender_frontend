@@ -11,7 +11,7 @@ export interface Ingredient {
   category: string;
   image: string;
   name_en: string;
-  net_unit_value: number;
+  // net_unit_value: number;
   unit: string;
   name: string;
 }
@@ -21,7 +21,7 @@ export interface Dish_Ingredient {
   image: string;
   vietnamese_name: string;
   ingredient_name?: string;
-  net_unit_value: number;
+  // net_unit_value: number;
   unit: string;
 }
 
@@ -38,6 +38,6 @@ export interface IngredientPayload {
   unit: string;
   category: string;
   image: string;
-  net_unit_value: number;
+  // net_unit_value: number;
 }
 

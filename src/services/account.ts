@@ -41,7 +41,7 @@ export async function createAccount(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      //'ngrok-skip-browser-warning': 'true',
+      'ngrok-skip-browser-warning': 'true',
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({
@@ -62,7 +62,7 @@ export async function updateAccount(
     {
       method: 'PUT',
       headers: {
-        //'ngrok-skip-browser-warning': 'true',
+        'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
@@ -77,7 +77,7 @@ export async function toggleAccountEnabled(id: string, enable: boolean): Promise
   const res = await fetch(`${BASE_URL}/admin/admins/${id}/status`, {
     method: 'PATCH',
     headers: {
-      //'ngrok-skip-browser-warning': 'true',
+      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },

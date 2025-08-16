@@ -11,7 +11,6 @@ import {
     StatsResponse
 } from '../services/product';
 import { DashboardLayout } from '../components/Layout/DashboardLayout';
-import { FullPageSpinner } from '../components/Common/FullPageSpinner';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';

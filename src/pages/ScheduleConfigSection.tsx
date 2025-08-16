@@ -21,13 +21,7 @@ type ScheduleForm = {
 };
 
 const DAY_LABELS: Record<number, string> = {
-  1: 'Thứ 2',
-  2: 'Thứ 3',
-  3: 'Thứ 4',
-  4: 'Thứ 5',
-  5: 'Thứ 6',
-  6: 'Thứ 7',
-  7: 'Chủ nhật',
+  1: 'Thứ 2', 2: 'Thứ 3', 3: 'Thứ 4', 4: 'Thứ 5', 5: 'Thứ 6', 6: 'Thứ 7', 7: 'Chủ nhật',
 };
 
 export const ScheduleConfigSection: React.FC = () => {
@@ -43,18 +37,19 @@ export const ScheduleConfigSection: React.FC = () => {
   });
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
-  const activeSchedules = schedules.filter(({ is_active }) => is_active);
-
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [targetId, setTargetId] = useState<string | null>(null);
+
+  const activeSchedules = (schedules || []).filter(({ is_active }) => is_active);
 
   const loadSchedules = async () => {
     setLoading(true);
     try {
       const data = await getSchedules();
-      setSchedules(data);
+      setSchedules(Array.isArray(data) ? data : []);
     } catch (e: any) {
-      toast.error(e.message || 'Không thể tải lịch');
+      toast.error(e?.message || 'Không thể tải lịch');
+      setSchedules([]); // fallback rỗng nhưng vẫn render
     } finally {
       setLoading(false);
     }
@@ -63,6 +58,7 @@ export const ScheduleConfigSection: React.FC = () => {
   useEffect(() => { loadSchedules(); }, []);
 
   useEffect(() => {
+    // auto adjust concurrency theo chains
     setForm(f => ({
       ...f,
       concurrency: f.chains.includes('WM') ? 2 : 5,
@@ -76,9 +72,8 @@ export const ScheduleConfigSection: React.FC = () => {
   const toggleChain = (chain: 'BHX' | 'WM') => {
     setForm(prev => {
       const has = prev.chains.includes(chain);
-      const next = has
-        ? prev.chains.filter(c => c !== chain)
-        : [...prev.chains, chain];
+      const next = has ? prev.chains.filter(c => c !== chain) : [...prev.chains, chain];
+      // không cho về mảng rỗng
       return { ...prev, chains: next.length ? next : prev.chains };
     });
   };
@@ -99,7 +94,7 @@ export const ScheduleConfigSection: React.FC = () => {
       setShowModal(false);
       loadSchedules();
     } catch (e: any) {
-      toast.error(e.message || 'Tạo schedule thất bại');
+      toast.error(e?.message || 'Tạo schedule thất bại');
     }
   };
 
@@ -115,7 +110,7 @@ export const ScheduleConfigSection: React.FC = () => {
       toast.success('Đã inactive');
       loadSchedules();
     } catch (e: any) {
-      toast.error(e.message || 'Inactive thất bại');
+      toast.error(e?.message || 'Inactive thất bại');
     } finally {
       setConfirmOpen(false);
       setTargetId(null);
@@ -285,21 +280,39 @@ export const ScheduleConfigSection: React.FC = () => {
               <th className="px-4 py-2 text-left">Hành động</th>
             </tr>
           </thead>
+
           <tbody className="divide-y divide-gray-200">
-            {!loading &&
-              activeSchedules.map(s => (
-                <tr key={s._id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2">{s.name}</td>
-                  <td className="px-4 py-2">{s.chains.join(', ')}</td>
-                  <td className="px-4 py-2">{s.schedule_type}</td>
-                  <td className="px-4 py-2">{s.schedule_config.hour ?? '-'}</td>
-                  <td className="px-4 py-2">{s.schedule_config.minute ?? '-'}</td>
-                  <td className="px-4 py-2">
-                    {s.schedule_config.day_of_week != null
-                      ? DAY_LABELS[s.schedule_config.day_of_week]
-                      : '-'}
-                  </td>
-                  <td className="px-4 py-2">{s.parameters.concurrency}</td>
+            {loading && (
+              <tr>
+                <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
+                  Đang tải lịch…
+                </td>
+              </tr>
+            )}
+
+            {!loading && activeSchedules.length === 0 && (
+              <tr>
+                <td colSpan={8} className="px-4 py-6 text-center text-gray-500 italic">
+                  Chưa có schedule đang hoạt động.
+                </td>
+              </tr>
+            )}
+
+            {!loading && activeSchedules.map(s => {
+              const hour = s?.schedule_config?.hour ?? '-';
+              const minute = s?.schedule_config?.minute ?? '-';
+              const dow = s?.schedule_config?.day_of_week;
+              const concurrency = s?.parameters?.concurrency ?? '-';
+
+              return (
+                <tr key={s._id || s.schedule_id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2">{s.name || '-'}</td>
+                  <td className="px-4 py-2">{Array.isArray(s.chains) ? s.chains.join(', ') : '-'}</td>
+                  <td className="px-4 py-2">{s.schedule_type || '-'}</td>
+                  <td className="px-4 py-2">{hour}</td>
+                  <td className="px-4 py-2">{minute}</td>
+                  <td className="px-4 py-2">{dow != null ? (DAY_LABELS[dow] || dow) : '-'}</td>
+                  <td className="px-4 py-2">{concurrency}</td>
                   <td className="px-4 py-2">
                     <button
                       onClick={() => confirmDelete(s.schedule_id)}
@@ -309,7 +322,8 @@ export const ScheduleConfigSection: React.FC = () => {
                     </button>
                   </td>
                 </tr>
-              ))}
+              );
+            })}
           </tbody>
         </table>
       </div>

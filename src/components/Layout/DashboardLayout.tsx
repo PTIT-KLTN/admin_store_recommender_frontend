@@ -2,7 +2,8 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
-import { Toaster, toast } from 'react-hot-toast';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -10,14 +11,14 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   
   useEffect(() => {
     if ((location.state as any)?.success) {
-      toast.success('Đăng nhập thành công!');
+      // toast.success('Đăng nhập thành công!');
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate]);
 
   return (
     <>
-      <Toaster position="top-right" />
+      <ToastContainer position="top-right" autoClose={3000} newestOnTop />
 
       <div className="flex h-screen bg-gray-100">
         <Sidebar />
